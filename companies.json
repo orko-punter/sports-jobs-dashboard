@@ -1,0 +1,632 @@
+{
+ "rule": "Sports business employers with London or European offices that hire post-MBA talent into strategy, commercial, partnerships, media rights, consulting or deals roles. Covers: sports consultancies and agencies (incl. rights/deals advisers), leagues and governing bodies, clubs and teams, sports media and data, sports investors.",
+ "companies": [
+  {
+   "name": "Two Circles",
+   "category": "Consulting & Agency",
+   "hq": "London",
+   "website": "twocircles.com",
+   "careers_url": "https://twocircles.com/gb/careers/",
+   "why": "Sports marketing and data consultancy; strategy, commercial and media rights work",
+   "source": {
+    "type": "workable",
+    "id": "twocircles"
+   }
+  },
+  {
+   "name": "CAA Portas",
+   "category": "Consulting & Agency",
+   "hq": "London",
+   "website": "caaportas.com",
+   "careers_url": "https://caaportas.com/careers/current-vacancies/",
+   "why": "Sports strategy consultancy (now owned by CAA Sports): governing bodies, leagues, governments",
+   "source": {
+    "type": "html",
+    "id": "https://caaportas.com/careers/current-vacancies/",
+    "pattern": "job-vacancy-tile__title\">(?P<title>[^<]+)</h4>\\s*<div class=\"job-vacancy-tile__location\">(?P<location>[^<]*)</div>.*?<a href=\"(?P<url>[^\"]+)\""
+   }
+  },
+  {
+   "name": "Deloitte Sports Business Group",
+   "category": "Consulting & Agency",
+   "hq": "Manchester / London",
+   "website": "deloitte.com",
+   "careers_url": "https://apply.deloitte.com/careers/SearchJobs?keywords=sport",
+   "why": "Sports finance and strategy advisory; Football Money League",
+   "linkedin_name": "Deloitte"
+  },
+  {
+   "name": "Kearney",
+   "category": "Consulting & Agency",
+   "hq": "Global",
+   "website": "kearney.com",
+   "careers_url": "https://kearney.recsolu.com/job_boards/1",
+   "why": "Sports and media strategy practice",
+   "source": {
+    "type": "html",
+    "id": "https://kearney.recsolu.com/job_boards/1",
+    "pattern": "search-results__req_title\"[^>]*href=\"(?P<url>[^\"]+)\">(?P<title>[^<]+)</a><div><span>[^<]*</span><span>[^<]*</span><span>(?P<location>[^<]+)</span>"
+   },
+   "focus_keywords": "sport|media|entertainment|tmt|transaction|m&a|private equity|deal|consultant|associate|manager"
+  },
+  {
+   "name": "L.E.K. Consulting",
+   "category": "Consulting & Agency",
+   "hq": "London",
+   "website": "lek.com",
+   "careers_url": "https://lek.tal.net/vx/lang-en-GB/mobile-0/appcentre-1/brand-2/candidate/jobboard/vacancy/1/adv/",
+   "why": "Sports, media and entertainment strategy and due diligence",
+   "source": {
+    "type": "atom",
+    "id": "https://lek.tal.net/vx/mobile-0/appcentre-1/brand-2/candidate/jobboard/vacancy/1/feed"
+   }
+  },
+  {
+   "name": "Oliver Wyman",
+   "category": "Consulting & Agency",
+   "hq": "Global",
+   "website": "oliverwyman.com",
+   "careers_url": "https://careers.marshmclennan.com/global/en/oliver-wyman",
+   "why": "Strategy consulting with sports and media clients",
+   "source": {
+    "type": "workday",
+    "id": "mmc.wd1.myworkdayjobs.com|mmc|MMC|Oliver Wyman"
+   },
+   "focus_keywords": "sport|entertainment|tmt|media &|media and|transaction|m&a|private equity|deal"
+  },
+  {
+   "name": "Roland Berger",
+   "category": "Consulting & Agency",
+   "hq": "Munich",
+   "website": "rolandberger.com",
+   "careers_url": "https://www.rolandberger.com/en/Join/",
+   "why": "Strategy consulting; sports business studies in Europe",
+   "source": {
+    "type": "smartrecruiters",
+    "id": "RolandBerger"
+   },
+   "focus_keywords": "sport|media|entertainment|tmt|transaction|investor|m&a|private equity|deal"
+  },
+  {
+   "name": "Ampere Analysis",
+   "category": "Media & Data",
+   "hq": "London",
+   "website": "ampereanalysis.com",
+   "careers_url": "https://ampereanalysis.com/careers",
+   "why": "Media rights and sports content research",
+   "source": {
+    "type": "html",
+    "id": "https://wwwbe.ampereanalysis.com/public/vacancies",
+    "pattern": "\"title\"\\s*:\\s*\"(?P<title>[^\"]+)\"",
+    "default_location": "London",
+    "accept": "application/json"
+   }
+  },
+  {
+   "name": "Infront",
+   "category": "Consulting & Agency",
+   "hq": "Zug",
+   "website": "infront.sport",
+   "careers_url": "https://www.infront.sport/sport-jobs",
+   "why": "Sports marketing and media rights agency"
+  },
+  {
+   "name": "Sportfive",
+   "category": "Consulting & Agency",
+   "hq": "Hamburg / Paris",
+   "website": "sportfive.com",
+   "careers_url": "https://sportfive.com/careers",
+   "why": "Sports rights and partnerships agency"
+  },
+  {
+   "name": "IMG",
+   "category": "Consulting & Agency",
+   "hq": "London / New York",
+   "website": "img.com",
+   "careers_url": "https://www.img.com/careers",
+   "why": "Events, media rights distribution and representation",
+   "source": {
+    "type": "workday",
+    "id": "wwecorp.wd5.myworkdayjobs.com|wwecorp|IMG"
+   }
+  },
+  {
+   "name": "TKO Group",
+   "category": "Leagues & Rights Holders",
+   "hq": "New York",
+   "website": "tkogrp.com",
+   "careers_url": "https://www.tkogrp.com/careers",
+   "why": "UFC / WWE owner; media rights and partnerships",
+   "source": {
+    "type": "workday",
+    "id": "wwecorp.wd5.myworkdayjobs.com|wwecorp|TKO"
+   }
+  },
+  {
+   "name": "WME Group (Endeavor)",
+   "category": "Consulting & Agency",
+   "hq": "Beverly Hills / London",
+   "website": "wmegrp.com",
+   "careers_url": "https://wmegrp.com/careers",
+   "why": "Representation, sports media and events",
+   "source": {
+    "type": "workday",
+    "id": "wmeimg.wd1.myworkdayjobs.com|wmeimg|WMEGRP"
+   }
+  },
+  {
+   "name": "Octagon",
+   "category": "Consulting & Agency",
+   "hq": "London / Stamford",
+   "website": "octagon.com",
+   "careers_url": "https://www.octagon.com/careers/",
+   "why": "Sponsorship consultancy and athlete marketing",
+   "source": {
+    "type": "greenhouse",
+    "id": "octagon"
+   }
+  },
+  {
+   "name": "THE·TEAM (Wasserman + CSM)",
+   "category": "Consulting & Agency",
+   "hq": "Los Angeles / London",
+   "website": "the.team",
+   "careers_url": "https://the.team/about/careers/",
+   "why": "Sports marketing, partnerships, consulting and representation (wasserman.com and csm.com now redirect here)",
+   "linkedin_name": "Wasserman",
+   "source": {
+    "type": "workday",
+    "id": "teamwass.wd5.myworkdayjobs.com|teamwass|wassermancareers"
+   }
+  },
+  {
+   "name": "CAA Sports",
+   "category": "Consulting & Agency",
+   "hq": "Los Angeles / London",
+   "website": "caa.com",
+   "careers_url": "https://caa.wd1.myworkdayjobs.com/en-US/Careers",
+   "why": "Representation, consulting and sports properties",
+   "source": {
+    "type": "workday",
+    "id": "caa.wd1.myworkdayjobs.com|caa|Careers"
+   }
+  },
+  {
+   "name": "Raine Group",
+   "category": "Investors & Banks",
+   "hq": "New York / London",
+   "website": "raine.com",
+   "careers_url": "https://www.raine.com/careers",
+   "why": "Merchant bank behind major sports team deals",
+   "source": {
+    "type": "lever",
+    "id": "raine"
+   }
+  },
+  {
+   "name": "Sixth Street",
+   "category": "Investors & Banks",
+   "hq": "San Francisco / London",
+   "website": "sixthstreet.com",
+   "careers_url": "https://sixthstreet.com/careers",
+   "why": "Investor in clubs and sports media rights",
+   "source": {
+    "type": "workday",
+    "id": "sixthstreet.wd1.myworkdayjobs.com|sixthstreet|sixthstreetcareers"
+   }
+  },
+  {
+   "name": "CVC Capital Partners",
+   "category": "Investors & Banks",
+   "hq": "Luxembourg / London",
+   "website": "cvc.com",
+   "careers_url": "https://www.cvc.com/careers/",
+   "why": "PE investor in LaLiga, Six Nations, WTA, Premiership Rugby"
+  },
+  {
+   "name": "RedBird Capital",
+   "category": "Investors & Banks",
+   "hq": "New York",
+   "website": "redbirdcap.com",
+   "careers_url": "https://www.redbirdcap.com/",
+   "why": "Owner of AC Milan; sports and media investing"
+  },
+  {
+   "name": "Arctos Partners",
+   "category": "Investors & Banks",
+   "hq": "Dallas",
+   "website": "arctospartners.com",
+   "careers_url": "https://www.arctospartners.com/",
+   "why": "Sports franchise investor (incl. PSG stake)"
+  },
+  {
+   "name": "Genius Sports",
+   "category": "Media & Data",
+   "hq": "London",
+   "website": "geniussports.com",
+   "careers_url": "https://www.geniussports.com/careers/",
+   "why": "Sports data, betting and media tech; league partnerships",
+   "source": {
+    "type": "greenhouse",
+    "id": "geniussports"
+   }
+  },
+  {
+   "name": "Sportradar",
+   "category": "Media & Data",
+   "hq": "St. Gallen",
+   "website": "sportradar.com",
+   "careers_url": "https://sportradar.com/careers/",
+   "why": "Sports data and rights partner to leagues",
+   "source": {
+    "type": "smartrecruiters",
+    "id": "sportradar"
+   }
+  },
+  {
+   "name": "Stats Perform",
+   "category": "Media & Data",
+   "hq": "London / Chicago",
+   "website": "statsperform.com",
+   "careers_url": "https://www.statsperform.com/careers/",
+   "why": "Sports data and AI; media partnerships",
+   "source": {
+    "type": "teamtailor",
+    "id": "statsperform"
+   }
+  },
+  {
+   "name": "DAZN",
+   "category": "Media & Data",
+   "hq": "London",
+   "website": "dazngroup.com",
+   "careers_url": "https://careers.dazn.com",
+   "why": "Global sports streaming; rights acquisition and strategy",
+   "source": {
+    "type": "pinpoint",
+    "id": "dazn"
+   }
+  },
+  {
+   "name": "The Athletic",
+   "category": "Media & Data",
+   "hq": "London / New York",
+   "website": "theathletic.com",
+   "careers_url": "https://jobs.lever.co/theathletic",
+   "why": "Sports media (NYT)",
+   "source": {
+    "type": "lever",
+    "id": "theathletic"
+   }
+  },
+  {
+   "name": "Hudl",
+   "category": "Media & Data",
+   "hq": "Lincoln / London",
+   "website": "hudl.com",
+   "careers_url": "https://www.hudl.com/jobs",
+   "why": "Performance analysis tech for clubs",
+   "source": {
+    "type": "greenhouse",
+    "id": "hudl"
+   }
+  },
+  {
+   "name": "Catapult",
+   "category": "Media & Data",
+   "hq": "Melbourne / Leeds",
+   "website": "catapult.com",
+   "careers_url": "https://www.catapult.com/careers",
+   "why": "Athlete performance tech",
+   "source": {
+    "type": "greenhouse",
+    "id": "catapultsports"
+   }
+  },
+  {
+   "name": "Teamworks",
+   "category": "Media & Data",
+   "hq": "Durham / London",
+   "website": "teamworks.com",
+   "careers_url": "https://teamworks.com/careers",
+   "why": "Operating platform for sports teams",
+   "source": {
+    "type": "ashby",
+    "id": "teamworks"
+   }
+  },
+  {
+   "name": "Kitman Labs",
+   "category": "Media & Data",
+   "hq": "Dublin",
+   "website": "kitmanlabs.com",
+   "careers_url": "https://jobs.lever.co/kitmanlabs",
+   "why": "Performance intelligence platform",
+   "source": {
+    "type": "lever",
+    "id": "kitmanlabs"
+   }
+  },
+  {
+   "name": "Sorare",
+   "category": "Media & Data",
+   "hq": "Paris",
+   "website": "sorare.com",
+   "careers_url": "https://sorare.com/careers",
+   "why": "Fantasy sports; league licensing partnerships",
+   "source": {
+    "type": "ashby",
+    "id": "sorare"
+   }
+  },
+  {
+   "name": "SeatGeek",
+   "category": "Media & Data",
+   "hq": "New York / London",
+   "website": "seatgeek.com",
+   "careers_url": "https://seatgeek.com/jobs",
+   "why": "Ticketing partner to clubs (e.g. Liverpool, Tottenham)",
+   "source": {
+    "type": "greenhouse",
+    "id": "seatgeek"
+   }
+  },
+  {
+   "name": "viagogo / StubHub",
+   "category": "Media & Data",
+   "hq": "Geneva / London",
+   "website": "viagogo.com",
+   "careers_url": "https://www.stubhub.com/careers",
+   "why": "Secondary ticketing marketplace",
+   "source": {
+    "type": "greenhouse",
+    "id": "viagogo"
+   }
+  },
+  {
+   "name": "Formula 1",
+   "category": "Leagues & Rights Holders",
+   "hq": "London",
+   "website": "corp.formula1.com",
+   "careers_url": "https://corp.formula1.com/careers/",
+   "why": "Commercial rights holder; media rights, partnerships, strategy"
+  },
+  {
+   "name": "Premier League",
+   "category": "Leagues & Rights Holders",
+   "hq": "London",
+   "website": "premierleague.com",
+   "careers_url": "https://premierleague.pinpointhq.com",
+   "why": "Media rights, commercial and strategy",
+   "source": {
+    "type": "pinpoint",
+    "id": "premierleague"
+   }
+  },
+  {
+   "name": "UEFA",
+   "category": "Leagues & Rights Holders",
+   "hq": "Nyon",
+   "website": "uefa.com",
+   "careers_url": "https://www.uefa.com/insideuefa/about-uefa/jobs/",
+   "why": "Governing body; competitions, commercial and media rights"
+  },
+  {
+   "name": "ATP Tour",
+   "category": "Leagues & Rights Holders",
+   "hq": "London",
+   "website": "atptour.com",
+   "careers_url": "https://www.atptour.com/en/corporate/careers",
+   "why": "Tennis tour; commercial, media and strategy",
+   "source": {
+    "type": "ashby",
+    "id": "atp"
+   }
+  },
+  {
+   "name": "WTA",
+   "category": "Leagues & Rights Holders",
+   "hq": "St. Petersburg / London",
+   "website": "wtatennis.com",
+   "careers_url": "https://www.teamworkonline.com/golf-tennis-jobs/protennisjobs/wta",
+   "why": "Women's tennis tour (CVC partnership)"
+  },
+  {
+   "name": "England & Wales Cricket Board",
+   "category": "Leagues & Rights Holders",
+   "hq": "London",
+   "website": "ecb.co.uk",
+   "careers_url": "https://app.beapplied.com/org/772/england-and-wales-cricket-board",
+   "why": "Governing body; The Hundred, media rights",
+   "source": {
+    "type": "html",
+    "id": "https://app.beapplied.com/org/772/england-and-wales-cricket-board",
+    "pattern": "jobCardTitle\" href=\"(?P<url>[^\"]+)\">\\s*(?P<title>[^<]+?)\\s*</a>.*?jobDetail\">\\s*<span>(?P<location>[^<]+)</span>"
+   }
+  },
+  {
+   "name": "Premiership Rugby",
+   "category": "Leagues & Rights Holders",
+   "hq": "London",
+   "website": "premrugby.com",
+   "careers_url": "https://premrugby.com/careers",
+   "why": "League; commercial and media"
+  },
+  {
+   "name": "Six Nations Rugby",
+   "category": "Leagues & Rights Holders",
+   "hq": "Dublin / London",
+   "website": "sixnationsrugby.com",
+   "careers_url": "https://www.sixnationsrugby.com/en/careers",
+   "why": "Rights holder (CVC-backed); commercial strategy. Posts roles on LinkedIn"
+  },
+  {
+   "name": "World Rugby",
+   "category": "Leagues & Rights Holders",
+   "hq": "Dublin",
+   "website": "world.rugby",
+   "careers_url": "https://www.world.rugby/organisation/about-us/careers",
+   "why": "Governing body; Rugby World Cup commercial"
+  },
+  {
+   "name": "LIV Golf",
+   "category": "Leagues & Rights Holders",
+   "hq": "London / Miami",
+   "website": "livgolf.com",
+   "careers_url": "https://jobs.ashbyhq.com/liv-golf",
+   "why": "League; commercial, partnerships and media",
+   "source": {
+    "type": "ashby",
+    "id": "liv-golf"
+   }
+  },
+  {
+   "name": "SailGP",
+   "category": "Leagues & Rights Holders",
+   "hq": "London",
+   "website": "sailgp.com",
+   "careers_url": "https://sailgp.bamboohr.com/careers",
+   "why": "League; commercial and partnerships",
+   "source": {
+    "type": "bamboohr",
+    "id": "sailgp"
+   }
+  },
+  {
+   "name": "Dorna (MotoGP)",
+   "category": "Leagues & Rights Holders",
+   "hq": "Madrid",
+   "website": "motogpcorporate.com",
+   "careers_url": "https://www.motogpcorporate.com/join-the-team/",
+   "why": "MotoGP rights holder (Liberty Media)"
+  },
+  {
+   "name": "City Football Group",
+   "category": "Clubs & Teams",
+   "hq": "Manchester / London",
+   "website": "cityfootballgroup.com",
+   "careers_url": "https://careers.cityfootballgroup.com/search",
+   "why": "Multi-club group; strategy and commercial central team"
+  },
+  {
+   "name": "Manchester United",
+   "category": "Clubs & Teams",
+   "hq": "Manchester / London",
+   "website": "manutd.com",
+   "careers_url": "https://careers.manutd.com/",
+   "why": "Commercial partnerships team is London-based",
+   "source": {
+    "type": "pinpoint",
+    "id": "manutd-careers"
+   }
+  },
+  {
+   "name": "Chelsea FC",
+   "category": "Clubs & Teams",
+   "hq": "London",
+   "website": "chelseafc.com",
+   "careers_url": "https://secure.workforceready.eu/ta/6189861.careers?CareersSearch",
+   "why": "London club; commercial and strategy",
+   "source": {
+    "type": "ukg",
+    "id": "6189861"
+   }
+  },
+  {
+   "name": "Arsenal",
+   "category": "Clubs & Teams",
+   "hq": "London",
+   "website": "arsenal.com",
+   "careers_url": "https://careers.arsenal.com/jobs",
+   "why": "London club; commercial and strategy",
+   "source": {
+    "type": "teamtailor",
+    "id": "careers.arsenal.com"
+   }
+  },
+  {
+   "name": "Tottenham Hotspur",
+   "category": "Clubs & Teams",
+   "hq": "London",
+   "website": "tottenhamhotspur.com",
+   "careers_url": "https://ce0812li.webitrent.com/ce0812li_webrecruitment/wrd/run/etrec179gf.open?wvid=94",
+   "why": "London club and stadium business"
+  },
+  {
+   "name": "Liverpool FC",
+   "category": "Clubs & Teams",
+   "hq": "Liverpool / London",
+   "website": "liverpoolfc.com",
+   "careers_url": "https://www.liverpoolfc.com/recruitment",
+   "why": "Commercial team partly London-based",
+   "source": {
+    "type": "smartrecruiters",
+    "id": "LiverpoolFootballClub"
+   }
+  },
+  {
+   "name": "Paris Saint-Germain",
+   "category": "Clubs & Teams",
+   "hq": "Paris",
+   "website": "psg.fr",
+   "careers_url": "https://www.psg.fr/club/carrieres",
+   "why": "Global club brand; partnerships and strategy"
+  },
+  {
+   "name": "Aston Martin F1",
+   "category": "Clubs & Teams",
+   "hq": "Silverstone",
+   "website": "astonmartinf1.com",
+   "careers_url": "https://astonmartinf1.pinpointhq.com",
+   "why": "F1 team; commercial partnerships",
+   "source": {
+    "type": "pinpoint",
+    "id": "astonmartinf1"
+   }
+  },
+  {
+   "name": "Williams Racing",
+   "category": "Clubs & Teams",
+   "hq": "Grove",
+   "website": "williamsf1.com",
+   "careers_url": "https://careers.williamsf1.com",
+   "why": "F1 team; commercial partnerships",
+   "source": {
+    "type": "html",
+    "id": "https://careers.williamsf1.com/jobs",
+    "pattern": "href=\"(?P<url>/job/[^\"]+-jid-\\d+)\"[^>]*>\\s*(?:<[^>]+>\\s*)*(?P<title>[^<]{3,140})<",
+    "location_from_url": true,
+    "page_param": "page"
+   }
+  },
+  {
+   "name": "McLaren Racing",
+   "category": "Clubs & Teams",
+   "hq": "Woking",
+   "website": "mclaren.com",
+   "careers_url": "https://racingcareers.mclaren.com/",
+   "why": "F1 team; commercial partnerships and strategy",
+   "source": {
+    "type": "html",
+    "id": "https://racingcareers.mclaren.com/jobs",
+    "pattern": "href=\"(?P<url>/job/[^\"]+-jid-\\d+)\"[^>]*>\\s*(?:<[^>]+>\\s*)*(?P<title>[^<]{3,140})<",
+    "location_from_url": true,
+    "page_param": "page"
+   }
+  },
+  {
+   "name": "Mercedes-AMG F1",
+   "category": "Clubs & Teams",
+   "hq": "Brackley",
+   "website": "mercedesamgf1.com",
+   "careers_url": "https://www.mercedesamgf1.com/careers/vacancies",
+   "why": "F1 team; partnerships and brand",
+   "source": {
+    "type": "html",
+    "id": "https://www.mercedesamgf1.com/careers/vacancies",
+    "pattern": "<tr[^>]*><td[^>]*><div[^>]*><div[^>]*>(?P<title>[^<]+)</div><div[^>]*>(?P<dept>[^<]+)</div>.*?href=\"(?P<url>/careers/vacancies/\\d+)\"",
+    "default_location": "Brackley, UK"
+   }
+  }
+ ]
+}

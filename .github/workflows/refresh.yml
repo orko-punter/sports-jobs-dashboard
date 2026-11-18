@@ -1,0 +1,45 @@
+name: Refresh jobs
+
+# Started by n8n (or the "Run workflow" button on GitHub). To also run on a timer without n8n,
+# uncomment the schedule below (times are UTC).
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: "0 6 * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run pipeline
+        env:
+          # Compare against the last published run so new_jobs.json lists only fresh roles
+          PREV_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: python3 pipeline.py
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
