@@ -47,7 +47,7 @@ Header Auth credential to the **Start GitHub refresh** node: name `Authorization
    - Headers: `Authorization: Bearer <token>`, `Accept: application/vnd.github+json`
    - JSON body: `{"ref": "main"}`
    - Token: a fine-grained personal access token for this repository with **Actions: Read and write**
-2. **Wait** node: 3 minutes
+2. **Wait** node: 4 minutes
 3. **HTTP Request** node: `GET https://orko-punter.github.io/sports-jobs-dashboard/new_jobs.json`
 4. Send the `jobs` list on by email, Slack, etc. (`count` is 0 when nothing is new)
 
