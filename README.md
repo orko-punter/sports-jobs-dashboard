@@ -25,6 +25,8 @@ open dashboard.html
 
 ## Hosted version
 
+Dashboard: https://orko-punter.github.io/sports-jobs-dashboard/
+
 The **Refresh jobs** GitHub Action runs the pipeline and publishes `site/` to GitHub Pages:
 
 | File | What it is |
@@ -37,12 +39,16 @@ Trigger it from n8n (see below) or with **Actions → Refresh jobs → Run workf
 
 ### n8n
 
-1. **HTTP Request** node: `POST https://api.github.com/repos/<owner>/<repo>/actions/workflows/refresh.yml/dispatches`
+Import `n8n/refresh-jobs-workflow.json` into n8n (it contains the steps below), then attach a
+Header Auth credential to the **Start GitHub refresh** node: name `Authorization`, value `Bearer <token>`.
+
+
+1. **HTTP Request** node: `POST https://api.github.com/repos/orko-punter/sports-jobs-dashboard/actions/workflows/refresh.yml/dispatches`
    - Headers: `Authorization: Bearer <token>`, `Accept: application/vnd.github+json`
    - JSON body: `{"ref": "main"}`
    - Token: a fine-grained personal access token for this repository with **Actions: Read and write**
 2. **Wait** node: 3 minutes
-3. **HTTP Request** node: `GET https://<owner>.github.io/<repo>/new_jobs.json`
+3. **HTTP Request** node: `GET https://orko-punter.github.io/sports-jobs-dashboard/new_jobs.json`
 4. Send the `jobs` list on by email, Slack, etc. (`count` is 0 when nothing is new)
 
 ## Adding a company
