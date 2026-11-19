@@ -73,27 +73,4 @@ function score(j) {
   return s;
 }
 const dateOf = j => j.postedDate || j.firstSeen || '';
-function dateLabel(j) {
-  if (j.postedDate) return `Posted ${fmtShort(j.postedDate)}`;
-  if (j.posted) return j.posted;
-  if (j.firstSeen) return `First seen ${fmtShort(j.firstSeen)}`;
-  return '';
-}
 const netLink = (c, key) => c && c.people.find(p => p.key === key || (!p.key && p.label.toLowerCase().includes(key)));
-
-// Facts from the dataset only: no invented statistics.
-function whyInteresting(j) {
-  const out = [];
-  if (j.loc === 'London') out.push('Based in London.');
-  else if (j.loc === 'UK') out.push(`UK-based (${j.location || 'outside London'}).`);
-  else if (j.loc === 'Europe') out.push(`Based in Europe (${j.location}). Check relocation and language needs.`);
-  else if (j.loc === 'Remote') out.push('Listed as remote.');
-  if (j.sen === 'Post-MBA') out.push('The title reads as post-MBA level.');
-  if (j.sen === 'Stretch') out.push('A stretch role (director / head of / principal). Worth a look with strong pre-MBA experience.');
-  if (j.fns.length) out.push(`Function: ${j.fns.join(', ')}.`);
-  if (j.new) out.push('New since the previous refresh.');
-  const others = j.co ? j.co.matches.filter(x => x !== j).length : 0;
-  if (others) out.push(`${j.company} has ${plural(others, 'other matched role')} open right now.`);
-  if (j.co && j.co.why) out.push(j.co.why + '.');
-  return out;
-}

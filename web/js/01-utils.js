@@ -65,8 +65,3 @@ const SRC = {
   pinpoint: 'Pinpoint', teamtailor: 'Teamtailor', recruitee: 'Recruitee', personio: 'Personio', workday: 'Workday',
   bamboohr: 'BambooHR', ukg: 'UKG Ready', atom: 'Oleeo (Atom feed)', html: 'Company careers page', manual: 'No feed (check by hand)',
 };
-const NET = [
-  ['lbs', 'LBS alumni', 'grad'], ['recruiters', 'Recruiters', 'users'], ['commercial', 'Commercial leadership', 'chart'],
-  ['strategy', 'Strategy team', 'spark'], ['partnerships', 'Partnerships team', 'link'], ['hiring', 'Hiring managers', 'briefcase'],
-  ['connections', 'Your connections', 'users'],
-];

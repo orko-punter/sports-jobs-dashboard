@@ -23,27 +23,29 @@ so it works opened from disk, on GitHub Pages, or anywhere else, with no server 
 
 | File | Role |
 | --- | --- |
-| `web/index.html` | Page shell (sidebar, top bar, panels, palette) |
-| `web/styles.css` | Design tokens (light + dark) and components |
+| `web/index.html` | Page shell (top bar, panel, search) |
+| `web/styles.css` | Light and dark themes and components |
 | `web/js/01-utils.js` | Helpers and constants |
 | `web/js/02-data.js` | Data loading, validation, de-duplication, relevance score |
-| `web/js/03-store.js` | Saved jobs, hidden jobs, watchlist, history, steps (browser `localStorage`) |
-| `web/js/04-filters.js` | Filtering, faceted counts, sorting |
-| `web/js/05-components.js` | Job rows/cards, company cards, toasts, copy/share |
-| `web/js/06…09-*.js` | Views: Overview, Explore jobs, Companies + Networking, Saved + Methodology |
-| `web/js/10-drawer.js` | Job and company side panels |
+| `web/js/03-store.js` | Answers, saved and hidden jobs, watchlist (browser `localStorage`) |
+| `web/js/04-filters.js` | The viewer's answers, matching and sorting |
+| `web/js/05-components.js` | Job rows, toasts, copy and share |
+| `web/js/06…09-*.js` | Views: questions + For you, All jobs, Companies, Saved + About the data |
+| `web/js/10-drawer.js` | Job and company panels |
 | `web/js/11-main.js` | Navigation, hash routing, keyboard shortcuts, ⌘K search, boot |
 
 The JS files share one scope and are concatenated in filename order.
 
 ### Sections
 
-- **Overview**: headline numbers, top matches, recently discovered roles, a computed intelligence brief, roles by function/location/type, companies to explore
-- **Explore jobs**: search, faceted filters (location, seniority, function, organisation type, new, saved, hidden), sorting, and a detail panel per role with apply, copy, share, hide, networking links, an outreach note and a next-steps checklist
-- **Companies**: all companies grouped by type, including those with no open roles, with a detail panel per company
-- **Networking**: LinkedIn search routes per company (LBS alumni, recruiters, commercial, strategy, partnerships, hiring managers, your connections)
-- **Saved**: saved jobs (with progress), watchlist, recently viewed and hidden jobs
-- **Methodology**: freshness, feed errors, platforms, filtering rules, full coverage table, limitations
+- **For you**: first-time visitors answer four questions (kind of work, where, kind of organisation, level; plus
+  the consulting segment if they pick consulting). Only roles that fit are shown; answers can be changed any time
+- **All jobs**: every matched role, grouped by organisation type, function, location or company, with search and
+  an option to include every UK & Europe listing
+- **Companies**: all companies grouped by type (consulting firms by segment), with a panel per company that holds
+  open roles and LinkedIn routes to people
+- **Saved**: saved roles, watched companies and hidden roles
+- **About the data** (footer link): freshness, rules, coverage table and limits
 
 Shareable links: `#/jobs/job/<id>` and `#/companies/company/<slug>` open a panel directly.
 
@@ -108,8 +110,8 @@ Each such firm in `companies.json` has an `advisory_type`, one of six segments (
 
 Role rules: at these firms consulting titles count even without a function keyword (Associate, Engagement
 Manager, Senior Consultant, Insight, Valuation). At generalist firms only sport/media/TMT practice roles and pure
-generalist consultant roles count; roles in unrelated practices are dropped. The **Sports consulting** page lists
-advisory and strategy roles at these firms, in-house strategy roles elsewhere, and every firm by segment.
+generalist consultant roles count; roles in unrelated practices are dropped. On the site, picking
+"Consulting & Advisory" in the questions adds a follow-up for the segment, and Companies lists consulting firms by segment.
 
 ## Adding a company
 

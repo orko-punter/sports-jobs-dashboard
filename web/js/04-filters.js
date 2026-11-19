@@ -1,42 +1,42 @@
-// ---------------------------------------------------------------- filtering + sorting
-const DEFAULT_F = { scope: 'match', q: '', loc: [], sen: [], fn: [], cat: [], adv: [], newOnly: false, savedOnly: false, showHidden: false, sort: 'relevance' };
-let F = { ...DEFAULT_F, ...(S.filters || {}) };
-for (const k of ['loc', 'sen', 'fn', 'cat', 'adv']) if (!Array.isArray(F[k])) F[k] = [];
-const persistFilters = () => { S.filters = F; Store.save(); };
+// ---------------------------------------------------------------- your answers + filtering
+// A profile is the viewer's answers to the four questions. An empty answer means "any".
+const Q_LOCS = [['London', 'London'], ['UK', 'Rest of the UK'], ['Europe', 'Mainland Europe'], ['Remote', 'Remote']];
+const DEFAULT_P = { fn: [], loc: [], cat: [], adv: [], stretch: true };
+const hasProfile = () => !!S.profile;
+const P = () => ({ ...DEFAULT_P, ...(S.profile || {}) });
+const CONSULTING = 'Consulting & Advisory';
 
-// skip = one facet to ignore, so each facet's counts show what you would get by ticking that option
-function applyFilters(jobs, f, skip) {
-  const toks = f.q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+function fits(j, p = P()) {
+  if (!j.match || isHidden(j.id)) return false;
+  if (p.fn.length && !j.fns.some(f => p.fn.includes(f))) return false;
+  if (p.loc.length && !p.loc.includes(j.loc)) return false;
+  if (p.cat.length && !p.cat.includes(j.category)) return false;
+  if (p.adv.length && j.category === CONSULTING && !p.adv.includes(j.adv)) return false;
+  if (!p.stretch && j.sen !== 'Post-MBA') return false;
+  return true;
+}
+// Plain-language summary of a profile, for the For you header
+function profileTags(p = P()) {
+  const t = [];
+  t.push(p.fn.length ? listJoin(p.fn) : 'Any function');
+  t.push(p.loc.length ? listJoin(p.loc.map(l => (Q_LOCS.find(x => x[0] === l) || [l, l])[1])) : 'London, UK & Europe');
+  t.push(p.cat.length ? listJoin(p.cat.map(catLabel)) : 'Any organisation');
+  if (p.cat.includes(CONSULTING) && p.adv.length) t.push(listJoin(p.adv.map(advLabel)));
+  t.push(p.stretch ? 'Post-MBA + stretch' : 'Post-MBA level');
+  return t;
+}
+
+function searchJobs(jobs, q) {
+  const toks = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if (!toks.length) return jobs;
   return jobs.filter(j => {
-    if (f.scope === 'match' && !j.match) return false;
-    if (!f.showHidden && isHidden(j.id)) return false;
-    if (skip !== 'loc' && f.loc.length && !f.loc.includes(j.loc)) return false;
-    if (skip !== 'sen' && f.sen.length && !f.sen.includes(j.sen)) return false;
-    if (skip !== 'fn' && f.fn.length && !j.fns.some(x => f.fn.includes(x))) return false;
-    if (skip !== 'cat' && f.cat.length && !f.cat.includes(j.category)) return false;
-    if (skip !== 'adv' && f.adv.length && !f.adv.includes(j.adv)) return false;
-    if (f.newOnly && !j.new) return false;
-    if (f.savedOnly && !isSaved(j.id)) return false;
-    if (toks.length) {
-      const hay = `${j.title} ${j.company} ${j.location} ${j.loc} ${j.fns.join(' ')} ${j.dept} ${catLabel(j.category)} ${j.adv ? advLabel(j.adv) : ''}`.toLowerCase();
-      if (!toks.every(t => hay.includes(t))) return false;
-    }
-    return true;
+    const hay = `${j.title} ${j.company} ${j.location} ${j.loc} ${j.fns.join(' ')} ${j.dept} ${catLabel(j.category)} ${j.adv ? advLabel(j.adv) : ''}`.toLowerCase();
+    return toks.every(t => hay.includes(t));
   });
 }
 
 const SORTS = {
-  relevance: { label: 'Best match', fn: (a, b) => score(b) - score(a) || a.title.localeCompare(b.title) },
-  newest: { label: 'Newest', fn: (a, b) => (b.new - a.new) || dateOf(b).localeCompare(dateOf(a)) || score(b) - score(a) },
-  company: { label: 'Company A–Z', fn: (a, b) => a.company.localeCompare(b.company) || score(b) - score(a) },
-  location: { label: 'Location', fn: (a, b) => LOCS.indexOf(a.loc) - LOCS.indexOf(b.loc) || a.location.localeCompare(b.location) || score(b) - score(a) },
+  relevance: (a, b) => score(b) - score(a) || a.title.localeCompare(b.title),
+  newest: (a, b) => (b.new - a.new) || dateOf(b).localeCompare(dateOf(a)) || score(b) - score(a),
 };
-const sortJobs = (jobs, key) => jobs.slice().sort((SORTS[key] || SORTS.relevance).fn);
-const activeFilterCount = f => f.loc.length + f.sen.length + f.fn.length + f.cat.length + f.adv.length + (f.newOnly ? 1 : 0) + (f.savedOnly ? 1 : 0) + (f.q.trim() ? 1 : 0);
-
-// Jump to Explore with a preset (used by KPIs, insights, company pages)
-function goJobs(preset) {
-  F = { ...DEFAULT_F, sort: F.sort, ...preset };
-  persistFilters();
-  if (route.view === 'jobs') { renderView(); } else location.hash = '#/jobs';
-}
+const sortJobs = (jobs, key) => jobs.slice().sort(SORTS[key] || SORTS.relevance);

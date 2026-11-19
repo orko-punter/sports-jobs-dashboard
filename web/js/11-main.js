@@ -2,33 +2,29 @@
 let D = null;
 const route = { view: null, panel: null, id: null };
 const VIEWS = {
-  overview: { label: 'Overview', icon: 'home', render: vOverview },
-  jobs: { label: 'Explore jobs', short: 'Jobs', icon: 'briefcase', render: vJobs, bind: bindJobs },
-  consulting: { label: 'Sports consulting', short: 'Consulting', icon: 'spark', render: vConsulting },
-  companies: { label: 'Companies', icon: 'building', render: vCompanies, bind: () => { bindCoToolbar('cq', updateCompanies); updateCompanies(); } },
-  network: { label: 'Networking', short: 'Network', icon: 'users', render: vNetwork, bind: () => { bindCoToolbar('nq', updateNetwork); updateNetwork(); } },
-  saved: { label: 'Saved', icon: 'bookmark', render: vSaved },
-  about: { label: 'Methodology', icon: 'info', render: vAbout },
+  'for-you': { label: 'For you', render: vForYou, nav: true },
+  jobs: { label: 'All jobs', render: vAll, bind: bindAll, nav: true },
+  companies: { label: 'Companies', render: vCompanies, bind: bindCompanies, nav: true },
+  saved: { label: 'Saved', render: vSaved, nav: true },
+  start: { label: 'Your answers', render: vStart },
+  about: { label: 'About the data', render: vAbout },
 };
+// links from earlier versions of the site keep working
+const ALIAS = { overview: 'for-you', consulting: 'companies', network: 'companies', explore: 'jobs' };
 
 function renderNav() {
-  const counts = { jobs: [D.matches.length, false], saved: [Object.keys(S.saved).length, false], companies: [D.companies.length, false] };
-  const nNew = D.matches.filter(j => j.new).length;
-  if (nNew) counts.jobs = [`${nNew} new`, true];
-  $('#nav').innerHTML = Object.entries(VIEWS).map(([k, v]) => `${k === 'about' ? '<div class="nav-sep"></div>' : ''}<a href="#/${k}" ${route.view === k ? 'aria-current="page"' : ''}>${ico(v.icon)}<span>${v.label}</span>${counts[k] && counts[k][0] ? `<span class="count ${counts[k][1] ? 'hot' : ''}">${counts[k][0]}</span>` : ''}</a>`).join('');
-  $('#tabbar').innerHTML = ['overview', 'jobs', 'consulting', 'companies', 'network', 'saved'].map(k => {
-    const v = VIEWS[k], badge = k === 'saved' ? Object.keys(S.saved).length : k === 'jobs' ? nNew : 0;
-    return `<a href="#/${k}" ${route.view === k ? 'aria-current="page"' : ''}>${ico(v.icon)}<span>${v.short || v.label}</span>${badge ? `<span class="badge">${badge}</span>` : ''}</a>`;
-  }).join('');
-  $('#side-fresh').innerHTML = `<b><span class="dot ${D.stale ? 'warn' : ''}"></span>${D.generated ? `Updated ${relTime(D.generated)}` : 'Refresh time unknown'}</b>${D.generated ? esc(D.generated.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })) : ''} · ${D.companies.filter(c => c.live).length} live feeds`;
+  const nSaved = Object.keys(S.saved).length;
+  const cur = route.view === 'start' ? 'for-you' : route.view;
+  $('#nav').innerHTML = Object.entries(VIEWS).filter(([, v]) => v.nav).map(([k, v]) =>
+    `<a href="#/${k}" ${cur === k ? 'aria-current="page"' : ''}>${v.label}${k === 'saved' && nSaved ? `<span class="n num">${nSaved}</span>` : ''}</a>`).join('');
 }
-
+function renderFoot() {
+  $('#foot').innerHTML = `<span>${D.generated ? `Updated ${relTime(D.generated)}` : 'Refresh time unknown'}</span>
+    <span>${D.companies.length} companies · ${D.companies.filter(c => c.live).length} live feeds</span>
+    <a href="#/about">About the data</a><span style="margin-left:auto">For London Business School students</span>`;
+}
 function renderBanner() {
-  const errs = D.companies.filter(c => c.error);
-  let html = '';
-  if (D.stale) html = `<div class="banner" role="alert">${ico('alert')}<div><b>Stale data.</b> ${D.generated ? `Last refreshed ${relTime(D.generated)}` : 'The refresh time is unknown'}. The daily refresh may not have run, so some listings may have closed. <a href="#/about">Details</a></div></div>`;
-  else if (errs.length && route.view === 'overview') html = `<div class="banner" style="background:var(--surface-2);color:var(--ink-2);border-color:var(--line)">${ico('info')}<div>${plural(errs.length, 'feed')} failed in the latest refresh (${esc(listJoin(errs.map(c => c.name)))}), so ${errs.length === 1 ? 'its' : 'their'} roles are missing today. <a href="#/about">Coverage</a></div></div>`;
-  $('#banner').innerHTML = html;
+  $('#banner').innerHTML = D.stale ? `<div class="banner"><div>${ico('alert')}<span>This data is ${D.generated ? `from ${relTime(D.generated)}` : 'of unknown age'}, so some roles may have closed. <a href="#/about">Details</a></span></div></div>` : '';
 }
 
 function renderView() {
@@ -39,12 +35,14 @@ function renderView() {
 }
 
 function onRoute() {
-  const [view, panel, id] = location.hash.replace(/^#\/?/, '').split('/');
-  const nextView = VIEWS[view] ? view : 'overview';
+  const [rawView, panel, id] = location.hash.replace(/^#\/?/, '').split('/');
+  const view = ALIAS[rawView] || rawView;
+  const nextView = VIEWS[view] ? view : 'for-you';
   const changed = nextView !== route.view;
   route.view = nextView; route.panel = panel || null; route.id = id ? decodeURIComponent(id) : null;
   if (changed) {
-    openRail(false);
+    if (nextView === 'start') QD = null;
+    if (nextView === 'for-you') FY.n = 25;
     renderView();
     window.scrollTo(0, 0);
     if (!route.panel) $('#main').focus({ preventScroll: true });
@@ -53,22 +51,23 @@ function onRoute() {
   if (route.panel === 'job' && D.byId.has(route.id)) { const j = D.byId.get(route.id); markViewed(j.id); showDrawer(jobPanel(j)); }
   else if (route.panel === 'company' && D.byCo.has(route.id)) showDrawer(companyPanel(D.byCo.get(route.id)));
   else {
-    if (route.panel) toast(route.panel === 'job' ? 'That role is no longer in the latest refresh' : 'Company not found');
+    if (route.panel) toast(route.panel === 'job' ? 'That role is no longer listed' : 'Company not found');
     hideDrawer();
-    if (!changed && route.view === 'jobs') updateJobs(); // reflect "viewed" state
+    if (!changed) refreshInPlace();
   }
 }
 
-// After save / hide / watch: refresh what's on screen without losing place
+// Re-draw the current view without losing scroll position or the search box
+function refreshInPlace() {
+  const y = window.scrollY;
+  if (route.view === 'jobs') updateAll();
+  else if (route.view === 'companies') updateCompanies();
+  else $('#main').innerHTML = VIEWS[route.view].render();
+  window.scrollTo(0, y);
+}
 function afterChange() {
   renderNav();
-  $$('[data-act="save"]').forEach(b => b.setAttribute('aria-pressed', String(isSaved(b.dataset.id))));
-  $$('[data-act="watch"]').forEach(b => { const c = D.byCo.get(b.dataset.co); if (c) b.setAttribute('aria-pressed', String(isWatched(c.name))); });
-  const y = window.scrollY;
-  if (route.view === 'jobs') updateJobs();
-  else if (route.view === 'companies') updateCompanies();
-  else if (route.view === 'network') updateNetwork();
-  else if (route.view === 'saved' || route.view === 'overview' || route.view === 'consulting') { $('#main').innerHTML = VIEWS[route.view].render(); window.scrollTo(0, y); }
+  refreshInPlace();
   if (!$('#drawer').hidden) {
     const body = $('.d-body'), st = body ? body.scrollTop : 0;
     if (route.panel === 'job' && D.byId.has(route.id)) $('#drawer').innerHTML = jobPanel(D.byId.get(route.id));
@@ -92,45 +91,42 @@ document.addEventListener('click', e => {
     case 'hide': if (j) toggleHide(j); break;
     case 'unhide': delete S.hidden[el.dataset.id]; Store.save(); afterChange(); break;
     case 'watch': if (c) toggleWatch(c.name); break;
-    case 'copy': if (j) copyText(j.url, 'Application link copied'); break;
     case 'share': if (j) shareJob(j); break;
-    case 'outreach': if (j) copyText(outreachNote(j), 'Outreach note copied. Fill in the [brackets]'); break;
-    case 'copy-saved': copyText(Object.keys(S.saved).map(id => { const x = D.byId.get(id) || S.saved[id]; return `${x.title} | ${x.company} | ${x.location || ''}\n${x.url}`; }).join('\n\n'), 'Saved list copied'); break;
-    case 'preset': e.preventDefault(); hideDrawer(); goJobs(JSON.parse(el.dataset.preset || '{}')); break;
-    case 'scope': F.scope = el.dataset.v; pageSize = 50; persistFilters(); updateJobs(); break;
-    case 'clear': F = { ...DEFAULT_F, scope: F.scope, sort: F.sort }; persistFilters(); $('#q') && ($('#q').value = ''); updateJobs(); break;
-    case 'unchip': { const k = el.dataset.k; if (Array.isArray(F[k])) F[k] = F[k].filter(x => x !== el.dataset.v); else if (k === 'q') { F.q = ''; $('#q').value = ''; } else F[k] = false; persistFilters(); updateJobs(); break; }
-    case 'more': pageSize += 50; updateJobs(); break;
-    case 'rail-open': openRail(true); break;
-    case 'rail-close': openRail(false); break;
+    case 'outreach': if (j) copyText(outreachNote(j), 'Note copied. Fill in the [brackets]'); break;
+    case 'copy-saved': copyText(Object.keys(S.saved).map(id => { const x = D.byId.get(id) || S.saved[id]; return `${x.title} | ${x.company} | ${x.location || ''}\n${x.url}`; }).join('\n\n'), 'List copied'); break;
     case 'saved-tab': S.savedTab = el.dataset.v; Store.save(); $('#main').innerHTML = vSaved(); break;
-    case 'cs': CS = el.dataset.v; $('#main').innerHTML = vConsulting(); break;
-    case 'co-clear': CF = { q: '', cat: '', watch: false, sort: CF.sort }; renderView(); break;
+    // questions
+    case 'q': { const k = el.dataset.k, v = el.dataset.v; QD[k] = QD[k].includes(v) ? QD[k].filter(x => x !== v) : [...QD[k], v];
+      if (k === 'cat' && !QD.cat.includes(CONSULTING)) QD.adv = [];
+      const y = window.scrollY; $('#main').innerHTML = vStart(); window.scrollTo(0, y); break; }
+    case 'q-stretch': { QD.stretch = el.dataset.v === '1'; const y = window.scrollY; $('#main').innerHTML = vStart(); window.scrollTo(0, y); break; }
+    case 'q-done': S.profile = QD; Store.save(); QD = null; if (route.view === 'for-you') { renderView(); window.scrollTo(0, 0); } else location.hash = '#/for-you'; break;
+    case 'q-skip': S.profile = { ...DEFAULT_P }; Store.save(); QD = null; renderView(); window.scrollTo(0, 0); break;
+    case 'q-cancel': QD = null; break;
+    // For you
+    case 'fy-sort': FY.sort = el.dataset.v; FY.n = 25; $('#main').innerHTML = vForYou(); break;
+    case 'fy-more': FY.n += 25; refreshInPlace(); break;
+    // All jobs
+    case 'aj-by': AJ.by = el.dataset.v; AJ.all = {}; $$('[data-act="aj-by"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === AJ.by))); updateAll(); break;
+    case 'aj-clear': AJ.q = ''; $('#aq').value = ''; updateAll(); break;
+    case 'g-all': AJ.all[el.dataset.g] = true; updateAll(); break;
+    case 'browse': e.preventDefault(); AJ.q = el.dataset.q; AJ.wide = true; hideDrawer();
+      if (route.view === 'jobs') { renderView(); } else location.hash = '#/jobs'; break;
   }
 });
-document.addEventListener('change', e => {
-  const t = e.target;
-  if (t.dataset.step != null) {
-    const arr = S.steps[t.dataset.id] || [];
-    arr[+t.dataset.step] = t.checked; S.steps[t.dataset.id] = arr; Store.save();
-    const h = t.closest('.d-sec').querySelector('h3 .muted'); if (h) h.textContent = `· ${stepsDone(t.dataset.id)}/${arr.length > 5 ? arr.length : 5}`;
-  }
-});
-$('#scrim').addEventListener('click', () => { if ($('#rail.open')) openRail(false); else location.hash = closeHref(); });
+$('#scrim').addEventListener('click', () => { location.hash = closeHref(); });
 
-// focus trap inside the open panel / palette
 document.addEventListener('keydown', e => {
   const pal = !$('#palette').hidden;
   if (e.key === 'Escape') {
     if (pal) return closePalette();
-    if ($('#rail.open')) return openRail(false);
     if (!$('#drawer').hidden) { location.hash = closeHref(); return; }
   }
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal ? closePalette() : openPalette(); return; }
   const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
-  if (e.key === '/' && !typing && !pal) { e.preventDefault(); if (route.view === 'jobs' && $('#drawer').hidden) $('#q').focus(); else openPalette(); return; }
+  if (e.key === '/' && !typing && !pal) { e.preventDefault(); if ($('#aq') && $('#drawer').hidden) $('#aq').focus(); else openPalette(); return; }
   if (e.key === 'Tab') {
-    const box = pal ? $('#palette') : !$('#drawer').hidden ? $('#drawer') : $('#rail.open');
+    const box = pal ? $('#palette') : !$('#drawer').hidden ? $('#drawer') : null;
     if (!box) return;
     const f = $$('a[href],button:not([disabled]),input,select,[tabindex]:not([tabindex="-1"])', box).filter(x => x.offsetParent !== null);
     if (!f.length) return;
@@ -139,7 +135,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ---------------------------------------------------------------- command palette (⌘K)
+// ---------------------------------------------------------------- search palette (⌘K)
 let palItems = [], palSel = 0;
 function openPalette() { $('#palette').hidden = false; $('#palette-q').value = ''; renderPalette(); $('#palette-q').focus(); }
 function closePalette() { $('#palette').hidden = true; }
@@ -148,19 +144,19 @@ function renderPalette() {
   const hit = s => toks.every(t => s.toLowerCase().includes(t));
   let groups;
   if (!toks.length) {
-    const viewed = S.viewed.map(id => D.byId.get(id)).filter(Boolean).slice(0, 4);
-    groups = [['Go to', Object.entries(VIEWS).map(([k, v]) => ({ icon: v.icon, t: v.label, run: () => { location.hash = `#/${k}`; } }))],
-      ['Recently viewed', viewed.map(j => ({ icon: 'briefcase', t: j.title, s: j.company, run: () => { location.hash = `#/${route.view}/job/${j.id}`; } }))]];
+    const viewed = S.viewed.map(id => D.byId.get(id)).filter(Boolean).slice(0, 5);
+    groups = [['Recently viewed', viewed.map(j => ({ t: j.title, s: j.company, run: () => { location.hash = `#/${route.view}/job/${j.id}`; } }))],
+      ['Go to', Object.entries(VIEWS).filter(([k]) => k !== 'start').map(([k, v]) => ({ t: v.label, run: () => { location.hash = `#/${k}`; } }))]];
   } else {
     const js = sortJobs(D.jobs.filter(j => hit(`${j.title} ${j.company} ${j.location}`)), 'relevance').slice(0, 7);
     const cs = D.companies.filter(c => hit(`${c.name} ${c.category} ${c.hq}`)).slice(0, 5);
-    groups = [['Jobs', js.map(j => ({ icon: 'briefcase', t: j.title, s: `${j.company} · ${j.location || j.loc}`, r: j.match ? j.sen : 'Outside rules', run: () => { location.hash = `#/${route.view}/job/${j.id}`; } }))],
-      ['Companies', cs.map(c => ({ icon: 'building', t: c.name, s: catLabel(c.category), r: c.live ? plural(c.matches.length, 'match', 'matches') : 'Check by hand', run: () => { location.hash = `#/${route.view}/company/${c.id}`; } }))]];
+    groups = [['Jobs', js.map(j => ({ t: j.title, s: `${j.company} · ${shortLoc(j)}`, r: j.match ? '' : 'Outside rules', run: () => { location.hash = `#/${route.view}/job/${j.id}`; } }))],
+      ['Companies', cs.map(c => ({ t: c.name, s: catLabel(c.category), r: c.live ? plural(c.matches.length, 'role') : 'Check by hand', run: () => { location.hash = `#/${route.view}/company/${c.id}`; } }))]];
   }
   palItems = groups.flatMap(g => g[1]); palSel = 0;
   let i = 0;
-  $('#palette-list').innerHTML = palItems.length ? groups.filter(g => g[1].length).map(([h, items]) => `<h4>${h}</h4>${items.map(x => `<div class="pitem" role="option" data-i="${i}" aria-selected="${i++ === 0}">${ico(x.icon)}<div style="min-width:0"><b>${esc(x.t)}</b>${x.s ? `<small>${esc(x.s)}</small>` : ''}</div>${x.r ? `<span class="r">${esc(x.r)}</span>` : ''}</div>`).join('')}`).join('')
-    : `<div class="empty" style="padding:28px">${'<p>No jobs or companies match.</p>'}</div>`;
+  $('#palette-list').innerHTML = palItems.length ? groups.filter(g => g[1].length).map(([h, items]) => `<h4>${h}</h4>${items.map(x => `<div class="pitem" role="option" data-i="${i}" aria-selected="${i++ === 0}"><div><b>${esc(x.t)}</b>${x.s ? `<small>${esc(x.s)}</small>` : ''}</div>${x.r ? `<span class="r">${esc(x.r)}</span>` : ''}</div>`).join('')}`).join('')
+    : '<p class="muted" style="padding:20px 12px">No jobs or companies match.</p>';
 }
 $('#palette-q').addEventListener('input', renderPalette);
 $('#palette-q').addEventListener('keydown', e => {
@@ -181,20 +177,19 @@ function applyTheme() {
   if (S.theme) document.documentElement.dataset.theme = S.theme; else delete document.documentElement.dataset.theme;
   $('#theme-btn').innerHTML = ico(effectiveDark() ? 'sun' : 'moon');
   $('#theme-btn').setAttribute('aria-label', effectiveDark() ? 'Switch to light theme' : 'Switch to dark theme');
+  document.querySelector('meta[name="theme-color"]').content = effectiveDark() ? '#111110' : '#fafaf8';
 }
 $('#theme-btn').addEventListener('click', () => { S.theme = effectiveDark() ? 'light' : 'dark'; Store.save(); applyTheme(); });
-
-window.addEventListener('scroll', () => $('.topbar').classList.toggle('scrolled', window.scrollY > 4), { passive: true });
 
 // ---------------------------------------------------------------- boot
 (async function boot() {
   applyTheme();
   try { D = await loadData(); }
   catch (err) {
-    $('#main').innerHTML = `<div class="card" style="margin-top:24px">${emptyState('Could not load the jobs data', `${esc(err.message)}. If you opened the template directly, run <code>python3 pipeline.py</code> and open <code>dashboard.html</code> instead.`, '<button class="btn dark" type="button" onclick="location.reload()">Try again</button>')}</div>`;
-    $('.empty .ill').innerHTML = ico('alert');
+    $('#main').innerHTML = emptyState('Could not load the jobs data', `${esc(err.message)}. Run <code>python3 pipeline.py</code> and open <code>dashboard.html</code>.`, '<button class="btn" type="button" onclick="location.reload()">Try again</button>');
     return;
   }
+  renderFoot();
   window.addEventListener('hashchange', onRoute);
   onRoute();
 })();
