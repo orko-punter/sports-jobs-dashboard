@@ -61,6 +61,10 @@ Working on the design only? `python3 pipeline.py --build` rebuilds the page from
 ## Hosted version
 
 Dashboard: https://orko-punter.github.io/sports-jobs-dashboard/
+Mirror on Vercel: https://touchline-sports-careers.vercel.app
+
+The same run also deploys `site/` to Vercel when the repository has the secrets `VERCEL_TOKEN`
+(a token from vercel.com/account/tokens), `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`. Without the token, that step is skipped.
 
 The **Refresh jobs** GitHub Action runs the pipeline and publishes `site/` to GitHub Pages:
 
