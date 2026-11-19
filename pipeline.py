@@ -239,7 +239,7 @@ FULL_SOURCES = dict(bamboohr=src_bamboohr, ukg=src_ukg, atom=src_atom, html=src_
 # ---------------------------------------------------------------- step 3: tagging + filters
 LONDON = re.compile(r"\blondon\b", re.I)
 UK = re.compile(r"\b(united kingdom|uk|england|gb|great britain|manchester|liverpool|birmingham|leeds|edinburgh|glasgow|bristol|brackley|silverstone|grove|woking|banbury|northern ireland|belfast|bangor|wales|cardiff|scotland)\b", re.I)
-EUROPE = re.compile(r"\b(europe|emea|paris|france|madrid|barcelona|spain|amsterdam|netherlands|zurich|zürich|geneva|lausanne|nyon|switzerland|milan|rome|italy|munich|berlin|hamburg|frankfurt|cologne|düsseldorf|germany|dublin|ireland|lisbon|portugal|monaco|stockholm|sweden|copenhagen|denmark|brussels|belgium|vienna|austria|warsaw|poland|oslo|norway|helsinki|finland|prague|luxembourg|budapest|athens|tallinn|estonia|st\.? gallen|zug|bucharest|romania|ljubljana|slovenia)\b", re.I)
+EUROPE = re.compile(r"\b(europe|emea|paris|france|madrid|barcelona|spain|amsterdam|netherlands|zurich|zürich|geneva|lausanne|nyon|switzerland|milan|rome|italy|munich|berlin|hamburg|frankfurt|cologne|düsseldorf|germany|dublin|ireland|lisbon|portugal|monaco|stockholm|sweden|copenhagen|denmark|brussels|belgium|vienna|austria|warsaw|poland|oslo|norway|helsinki|finland|prague|luxembourg|budapest|athens|greece|tallinn|estonia|st\.? gallen|zug|bucharest|romania|ljubljana|slovenia)\b", re.I)
 NON_EU = re.compile(r"\b(usa|united states|new york|nyc|los angeles|california|texas|florida|canada|toronto|australia|sydney|melbourne|india|singapore|hong kong|japan|tokyo|china|dubai|uae|saudi|riyadh|doha|qatar|brazil|mexico|south africa|philippines|thailand|bangkok|colombia|argentina|chicago|atlanta|boston|miami|seattle|denver|nashville|dallas|houston|montevideo|uruguay)\b", re.I)
 REMOTE = re.compile(r"\bremote\b", re.I)
 
@@ -286,6 +286,35 @@ FUNCTIONS = {
 }
 FUNC_RE = {k: re.compile(v, re.I) for k, v in FUNCTIONS.items()}
 EXCLUDE_FUNC = re.compile(r"\b(engineer|engineering|developer|devops|software|sre|qa|tester|chef|cook|kitchen|nurse|physio|physiotherapist|doctor|medical|coach|coaching|scout|scouting|steward|security officer|warehouse|driver|mechanic|technician|machinist|fabricat|composite|aerodynam|electrician|plumber|cleaner|groundsman|grounds|kit|catering|bartender|barista|server|retail|store|cashier|customer service|call centre|payroll|bookkeeper|accounts payable|accounts receivable|tax|legal counsel|lawyer|solicitor|paralegal|it support|helpdesk|infrastructure|network|cyber|video editor|camera|producer|commentator|presenter|journalist|writer|editor|graphic designer|animator|freelance|data engineer|machine learning|ml |scientist|trader|trading|odds|quant|sportsbook|risk analyst|fraud|compliance analyst|hr|human resources|people systems|people partner|talent acquisition|recruit\w*|reward|copywriter|production|on-screen|host broadcast|customer success|solutions consultant|dynamics consultant|salesforce|workday|accountant|lawyer|painter|decorator|planner|support officer|designer|design manager|it manager|it|technology specialist|test programme|test program|finance project|creative project|art director)\b", re.I)
+
+# At consulting / advisory firms (companies.json "advisory_type") the career track itself is advisory, so generic
+# consulting titles count even without a function keyword ("Associate", "Engagement Manager", "Senior Consultant").
+ADVISORY_ROLE = re.compile(r"\b(consult\w*|advis\w*|strateg\w*|insights?|analytics|valuation|research|economist|economics|engagement manager|"
+                           r"case team|project leader|principal|associate|client (lead|partner|strategy|director|manager)|"
+                           r"transaction\w*|deals?|m&a|corporate finance|investment|pricing)\b", re.I)
+# Generalist firms: practice-specific roles outside sport / media / TMT are not a route into sports work
+OTHER_SECTOR = re.compile(r"\b(industrial\w*|transport\w*|energy|utilities|infrastructure|health\s?care|life sciences?|pharma\w*|biotech|"
+                          r"financial services|insurance|banking|securities|public sector|government|defen[cs]e|aerospace|automotive|"
+                          r"chemicals?|construction|mining|real estate|oil|e-?discovery|cyber\w*|forensic\w*|compliance|regulat\w*|tax|"
+                          r"actuarial|pensions?|restructuring|arbitration|competition|antitrust)\b", re.I)
+
+# Practices at generalist firms that work on sports / media deals and rights
+SPORTS_PRACTICE = re.compile(r"\b(sports?|media|entertainment|tmt|telecoms?|telecommunications|broadcast\w*|gaming|"
+                             r"technology,? media|leisure)\b", re.I)
+GENERIC_WORDS = re.compile(r"\b(senior|sr|experienced|advanced|management|consultants?|consultante?|confirm[ée]e?|project|manager|associates?|"
+                           r"engagement|principal|strategy|strategic|all|levels?|business|areas?|genders?|m/f/d|m/w/d|f/h|h/f|"
+                           r"deine|bewerbung|als|minimum|ans|d'exp[ée]rience|professionnelle|years?|experience|office|hybrid|"
+                           r"arrangement|generalist|and|or|for|the|in|at|team|\d+)\b", re.I)
+
+def generalist_entry(title, company):
+    """True when a generalist firm's title names no practice at all, e.g. 'Senior Consultant (m/f/d) - Austria'."""
+    t = re.sub(r"\([^)]*\)", " ", title)
+    for word in re.split(r"[^\w.]+", company.split("(")[0]):
+        if len(word) > 2:
+            t = re.sub(re.escape(word), " ", t, flags=re.I)
+    t = LONDON.sub(" ", UK.sub(" ", EUROPE.sub(" ", t)))
+    t = GENERIC_WORDS.sub(" ", t)
+    return len(re.sub(r"[^a-zA-Zà-ÿ]", "", t)) < 3
 
 def function_tags(title, dept):
     tags = [k for k, r in FUNC_RE.items() if r.search(title)]
@@ -368,6 +397,7 @@ def main():
     check = "--check" in sys.argv
     shortlist = json.load(open(os.path.join(ROOT, "companies.json")))
     companies, rule = shortlist["companies"], shortlist.get("rule", "")
+    advisory_types = shortlist.get("advisory_types", {})
     print(f"Step 1  loaded {len(companies)} companies")
     with cf.ThreadPoolExecutor(16) as ex:
         results = list(ex.map(run_company, companies))
@@ -382,20 +412,30 @@ def main():
             loc = location_tag(j.get("location", ""), j.get("remote"))
             sen = seniority_tag(j["title"])
             funcs = function_tags(j["title"], j.get("dept", ""))
+            adv = c.get("advisory_type")
+            advisory_track = bool(adv) and bool(ADVISORY_ROLE.search(j["title"]))
+            if advisory_track and "Strategy & Consulting" not in funcs:
+                funcs = ["Strategy & Consulting"] + funcs
             excluded = bool(EXCLUDE_FUNC.search(j["title"]))
             if c.get("focus_keywords") and not re.search(c["focus_keywords"], j["title"] + " " + j.get("dept", ""), re.I):
-                excluded = True  # generalist firm: only keep sport / media / deals roles
+                excluded = True  # firm where sport is a niche: only keep roles that mention it
+            if adv == "generalist":
+                text = j["title"] + " " + j.get("dept", "")
+                in_practice = bool(SPORTS_PRACTICE.search(text)) or generalist_entry(j["title"], c["name"])
+                if not advisory_track or OTHER_SECTOR.search(text) or not in_practice:
+                    excluded = True  # generalist consultancy: sport / media / TMT practice roles, or pure generalist entry roles
             if loc in ("Other",):
                 continue  # outside London/Europe: drop at source to keep the file small
             rec = dict(company=c["name"], category=c["category"], title=j["title"], location=j.get("location", "") or "-",
                        loc_tag=loc, seniority=sen, functions=funcs, relevant=bool(funcs) and not excluded,
-                       url=j["url"], posted=j.get("posted", ""), dept=strip_html(j.get("dept", "")))
+                       url=j["url"], posted=j.get("posted", ""), dept=strip_html(j.get("dept", "")), advisory_type=adv)
             rec["people_url"] = job_people_link(c, rec)
             all_jobs.append(rec)
             kept += 1
         comp_out.append(dict(name=c["name"], category=c["category"], hq=c.get("hq", ""), website=c.get("website", ""),
                              careers_url=c.get("careers_url", ""), why=c.get("why", ""), status=status,
                              linkedin_name=c.get("linkedin_name") or c["name"], contacts=c.get("contacts", []),
+                             advisory_type=c.get("advisory_type"),
                              source=(c.get("source") or {}).get("type", "manual"),
                              jobs_total=len(jobs), jobs_europe=kept, people=people_links(c)))
     if check:
@@ -429,7 +469,8 @@ def main():
                 manual=sum(1 for c in comp_out if c["status"] == "manual"),
                 errors=[dict(name=c["name"], status=c["status"]) for c in comp_out if c["status"].startswith("error")],
                 fetched=sum(c["jobs_total"] for c in comp_out), uk_europe=len(all_jobs), matches=len(match),
-                new_matches=len(new_matches), first_run=first_run, rule=rule, functions=list(FUNCTIONS))
+                new_matches=len(new_matches), first_run=first_run, rule=rule, functions=list(FUNCTIONS),
+                advisory_types=advisory_types)
     data = dict(generated=generated, meta=meta, companies=comp_out, jobs=all_jobs)
     new_data = dict(generated=generated, count=len(new_matches), first_run=first_run,
                     jobs=[{k: j[k] for k in ("company", "title", "location", "loc_tag", "seniority", "functions", "url", "people_url")}

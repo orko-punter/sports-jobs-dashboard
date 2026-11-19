@@ -42,6 +42,7 @@ function normalise(raw) {
       sen: j.seniority || 'Unclear', fns: Array.isArray(j.functions) ? j.functions : [], relevant: !!j.relevant,
       match: 'match' in j ? !!j.match : (!!j.relevant && ['Post-MBA', 'Stretch'].includes(j.seniority) && ['London', 'UK', 'Europe', 'Remote'].includes(j.loc_tag)),
       url: j.url, posted: j.posted || '', postedDate: j.posted_date || isoPrefix(j.posted), firstSeen: j.first_seen || null,
+      adv: j.advisory_type || (co && co.advisory_type) || null,
       dept: j.dept || '', peopleUrl: j.people_url || '', new: !!j.new, alts: [],
     };
     groups.set(key, job); jobs.push(job);
@@ -54,7 +55,7 @@ function normalise(raw) {
   const functions = Array.isArray(meta.functions) && meta.functions.length ? meta.functions : countBy(jobs, j => j.fns).map(x => x[0]);
   const ageH = generated ? (Date.now() - generated) / 36e5 : null;
   return {
-    meta, generated, ageH, stale: ageH == null || ageH > 36, firstRun: !!meta.first_run,
+    meta, advTypes: meta.advisory_types || {}, generated, ageH, stale: ageH == null || ageH > 36, firstRun: !!meta.first_run,
     companies, jobs, matches: jobs.filter(j => j.match), functions, malformed,
     dupes: jobs.filter(j => j.alts.length).length,
     byId: new Map(jobs.map(j => [j.id, j])), byCo: new Map(companies.map(c => [c.id, c])),

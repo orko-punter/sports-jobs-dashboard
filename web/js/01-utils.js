@@ -35,13 +35,17 @@ const listJoin = a => a.length <= 1 ? (a[0] || '') : a.slice(0, -1).join(', ') +
 const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
 
 const CATS = [
-  ['Consulting & Agency', 'Consulting & Agencies'],
+  ['Consulting & Advisory', 'Consulting & Advisory'],
+  ['Agencies & Rights Marketing', 'Agencies & Rights Marketing'],
   ['Leagues & Rights Holders', 'Leagues & Rights Holders'],
   ['Clubs & Teams', 'Clubs & Teams'],
   ['Media & Data', 'Media & Data'],
   ['Investors & Banks', 'Investors & Banks'],
 ];
 const catLabel = c => (CATS.find(x => x[0] === c) || [c, c])[1];
+const ADV = ['strategy', 'media', 'analytics', 'research', 'deals', 'generalist'];
+const advLabel = k => (D && D.advTypes[k] && D.advTypes[k][0]) || k;
+const advDesc = k => (D && D.advTypes[k] && D.advTypes[k][1]) || '';
 const LOCS = ['London', 'UK', 'Europe', 'Remote', 'Unknown'];
 const LOC_LABEL = { London: 'London', UK: 'UK (outside London)', Europe: 'Europe', Remote: 'Remote', Unknown: 'Location not stated' };
 const SENS = ['Post-MBA', 'Stretch', 'Unclear', 'Junior', 'Senior'];

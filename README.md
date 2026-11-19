@@ -91,6 +91,26 @@ Header Auth credential to the **Start GitHub refresh** node: name `Authorization
 3. **HTTP Request** node: `GET https://orko-punter.github.io/sports-jobs-dashboard/new_jobs.json`
 4. Send the `jobs` list on by email, Slack, etc. (`count` is 0 when nothing is new)
 
+## Sports consulting
+
+"Consulting" is defined by what a firm does, not its name: any firm whose product is advice, valuation,
+research or analytics bought by teams, leagues, rights holders, broadcasters or sports investors.
+Each such firm in `companies.json` has an `advisory_type`, one of six segments (definitions under `advisory_types`):
+
+| Segment | Examples |
+| --- | --- |
+| `strategy`: sports strategy & commercial advisory | Two Circles, CAA Portas, Deloitte SBG, ColganBauer, The Sports Consultancy |
+| `media`: media, rights & valuation | O&O, Altman Solon, MTM, Ampere, Brand Finance, Enders |
+| `analytics`: performance & recruitment analytics | Twenty First Group, Analytics FC, LCP Sports, Hudl/StatsBomb, Stats Perform |
+| `research`: fan, sponsorship & market research | Nielsen Sports, YouGov Sport, Gemba, Futures |
+| `deals`: sports M&A & investment advisory | Raine, Inner Circle Sports, Tifosy, Houlihan Lokey |
+| `generalist`: generalist firms with sports/TMT practices | BCG, Bain, McKinsey, Oliver Wyman, Roland Berger, Kearney, L.E.K., OC&C |
+
+Role rules: at these firms consulting titles count even without a function keyword (Associate, Engagement
+Manager, Senior Consultant, Insight, Valuation). At generalist firms only sport/media/TMT practice roles and pure
+generalist consultant roles count; roles in unrelated practices are dropped. The **Sports consulting** page lists
+advisory and strategy roles at these firms, in-house strategy roles elsewhere, and every firm by segment.
+
 ## Adding a company
 
 Add an entry to `companies.json`. Give it a `source` if its careers site uses one of the

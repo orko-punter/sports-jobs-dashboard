@@ -50,7 +50,7 @@ function companyStats(c) {
 function companyCard(c) {
   return `<article class="ccard">
     <button class="hit" type="button" data-act="open-co" data-co="${esc(c.id)}" aria-label="Open ${esc(c.name)}"></button>
-    <div class="top">${monogram(c.name)}<div style="min-width:0"><h3>${esc(c.name)}</h3><div class="sub">${esc(catLabel(c.category))}${c.hq ? ' · ' + esc(c.hq) : ''}</div></div></div>
+    <div class="top">${monogram(c.name)}<div style="min-width:0"><h3>${esc(c.name)}</h3><div class="sub">${esc(c.advisory_type ? advLabel(c.advisory_type) : catLabel(c.category))}${c.hq ? ' · ' + esc(c.hq) : ''}</div></div></div>
     <p class="why">${esc(c.why || '')}</p>
     ${companyStats(c)}
     <div class="acts">${ext(c.careers_url, `Careers ${ico('ext', 'i-sm')}`)}${ext((netLink(c, 'lbs') || {}).url, `${ico('grad', 'i-sm')} LBS alumni`)}${watchBtn(c)}</div>

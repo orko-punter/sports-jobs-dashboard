@@ -1,9 +1,9 @@
 {
- "rule": "Sports business employers with London or European offices that hire post-MBA talent into strategy, commercial, partnerships, media rights, consulting or deals roles. Covers: sports consultancies and agencies (incl. rights/deals advisers), leagues and governing bodies, clubs and teams, sports media and data, sports investors.",
+ "rule": "Sports business employers with London or European offices that hire post-MBA talent into strategy, commercial, partnerships, media rights, consulting or deals roles. Covers: sports consultancies and agencies (incl. rights/deals advisers), leagues and governing bodies, clubs and teams, sports media and data, sports investors. Consulting is defined by what a firm does, not its name: any firm whose product is advice, valuation, research or analytics bought by sports teams, leagues, rights holders, broadcasters or sports investors.",
  "companies": [
   {
    "name": "Two Circles",
-   "category": "Consulting & Agency",
+   "category": "Consulting & Advisory",
    "hq": "London",
    "website": "twocircles.com",
    "careers_url": "https://twocircles.com/gb/careers/",
@@ -11,11 +11,12 @@
    "source": {
     "type": "workable",
     "id": "twocircles"
-   }
+   },
+   "advisory_type": "strategy"
   },
   {
    "name": "CAA Portas",
-   "category": "Consulting & Agency",
+   "category": "Consulting & Advisory",
    "hq": "London",
    "website": "caaportas.com",
    "careers_url": "https://caaportas.com/careers/current-vacancies/",
@@ -24,20 +25,22 @@
     "type": "html",
     "id": "https://caaportas.com/careers/current-vacancies/",
     "pattern": "job-vacancy-tile__title\">(?P<title>[^<]+)</h4>\\s*<div class=\"job-vacancy-tile__location\">(?P<location>[^<]*)</div>.*?<a href=\"(?P<url>[^\"]+)\""
-   }
+   },
+   "advisory_type": "strategy"
   },
   {
    "name": "Deloitte Sports Business Group",
-   "category": "Consulting & Agency",
+   "category": "Consulting & Advisory",
    "hq": "Manchester / London",
    "website": "deloitte.com",
    "careers_url": "https://apply.deloitte.com/careers/SearchJobs?keywords=sport",
    "why": "Sports finance and strategy advisory; Football Money League",
-   "linkedin_name": "Deloitte"
+   "linkedin_name": "Deloitte",
+   "advisory_type": "strategy"
   },
   {
    "name": "Kearney",
-   "category": "Consulting & Agency",
+   "category": "Consulting & Advisory",
    "hq": "Global",
    "website": "kearney.com",
    "careers_url": "https://kearney.recsolu.com/job_boards/1",
@@ -47,23 +50,24 @@
     "id": "https://kearney.recsolu.com/job_boards/1",
     "pattern": "search-results__req_title\"[^>]*href=\"(?P<url>[^\"]+)\">(?P<title>[^<]+)</a><div><span>[^<]*</span><span>[^<]*</span><span>(?P<location>[^<]+)</span>"
    },
-   "focus_keywords": "sport|media|entertainment|tmt|transaction|m&a|private equity|deal|consultant|associate|manager"
+   "advisory_type": "generalist"
   },
   {
    "name": "L.E.K. Consulting",
-   "category": "Consulting & Agency",
+   "category": "Consulting & Advisory",
    "hq": "London",
    "website": "lek.com",
    "careers_url": "https://lek.tal.net/vx/lang-en-GB/mobile-0/appcentre-1/brand-2/candidate/jobboard/vacancy/1/adv/",
-   "why": "Sports, media and entertainment strategy and due diligence",
+   "why": "Strategy consultancy with a dedicated sports practice (rights, valuations, venue and league strategy); also strong in media and TMT deals",
    "source": {
     "type": "atom",
     "id": "https://lek.tal.net/vx/mobile-0/appcentre-1/brand-2/candidate/jobboard/vacancy/1/feed"
-   }
+   },
+   "advisory_type": "generalist"
   },
   {
    "name": "Oliver Wyman",
-   "category": "Consulting & Agency",
+   "category": "Consulting & Advisory",
    "hq": "Global",
    "website": "oliverwyman.com",
    "careers_url": "https://careers.marshmclennan.com/global/en/oliver-wyman",
@@ -72,11 +76,11 @@
     "type": "workday",
     "id": "mmc.wd1.myworkdayjobs.com|mmc|MMC|Oliver Wyman"
    },
-   "focus_keywords": "sport|entertainment|tmt|media &|media and|transaction|m&a|private equity|deal"
+   "advisory_type": "generalist"
   },
   {
    "name": "Roland Berger",
-   "category": "Consulting & Agency",
+   "category": "Consulting & Advisory",
    "hq": "Munich",
    "website": "rolandberger.com",
    "careers_url": "https://www.rolandberger.com/en/Join/",
@@ -85,7 +89,7 @@
     "type": "smartrecruiters",
     "id": "RolandBerger"
    },
-   "focus_keywords": "sport|media|entertainment|tmt|transaction|investor|m&a|private equity|deal"
+   "advisory_type": "generalist"
   },
   {
    "name": "Ampere Analysis",
@@ -100,11 +104,12 @@
     "pattern": "\"title\"\\s*:\\s*\"(?P<title>[^\"]+)\"",
     "default_location": "London",
     "accept": "application/json"
-   }
+   },
+   "advisory_type": "media"
   },
   {
    "name": "Infront",
-   "category": "Consulting & Agency",
+   "category": "Agencies & Rights Marketing",
    "hq": "Zug",
    "website": "infront.sport",
    "careers_url": "https://www.infront.sport/sport-jobs",
@@ -112,7 +117,7 @@
   },
   {
    "name": "Sportfive",
-   "category": "Consulting & Agency",
+   "category": "Agencies & Rights Marketing",
    "hq": "Hamburg / Paris",
    "website": "sportfive.com",
    "careers_url": "https://sportfive.com/careers",
@@ -120,7 +125,7 @@
   },
   {
    "name": "IMG",
-   "category": "Consulting & Agency",
+   "category": "Agencies & Rights Marketing",
    "hq": "London / New York",
    "website": "img.com",
    "careers_url": "https://www.img.com/careers",
@@ -144,7 +149,7 @@
   },
   {
    "name": "WME Group (Endeavor)",
-   "category": "Consulting & Agency",
+   "category": "Agencies & Rights Marketing",
    "hq": "Beverly Hills / London",
    "website": "wmegrp.com",
    "careers_url": "https://wmegrp.com/careers",
@@ -156,7 +161,7 @@
   },
   {
    "name": "Octagon",
-   "category": "Consulting & Agency",
+   "category": "Agencies & Rights Marketing",
    "hq": "London / Stamford",
    "website": "octagon.com",
    "careers_url": "https://www.octagon.com/careers/",
@@ -168,20 +173,21 @@
   },
   {
    "name": "THE·TEAM (Wasserman + CSM)",
-   "category": "Consulting & Agency",
+   "category": "Agencies & Rights Marketing",
    "hq": "Los Angeles / London",
    "website": "the.team",
    "careers_url": "https://the.team/about/careers/",
-   "why": "Sports marketing, partnerships, consulting and representation (wasserman.com and csm.com now redirect here)",
+   "why": "Wasserman agency incl. CSM Strategy: sports strategy, rights valuation and commercial consulting for rights holders and host cities",
    "linkedin_name": "Wasserman",
    "source": {
     "type": "workday",
     "id": "teamwass.wd5.myworkdayjobs.com|teamwass|wassermancareers"
-   }
+   },
+   "advisory_type": "strategy"
   },
   {
    "name": "CAA Sports",
-   "category": "Consulting & Agency",
+   "category": "Agencies & Rights Marketing",
    "hq": "Los Angeles / London",
    "website": "caa.com",
    "careers_url": "https://caa.wd1.myworkdayjobs.com/en-US/Careers",
@@ -201,7 +207,8 @@
    "source": {
     "type": "lever",
     "id": "raine"
-   }
+   },
+   "advisory_type": "deals"
   },
   {
    "name": "Sixth Street",
@@ -269,11 +276,12 @@
    "hq": "London / Chicago",
    "website": "statsperform.com",
    "careers_url": "https://www.statsperform.com/careers/",
-   "why": "Sports data and AI; media partnerships",
+   "why": "Opta data and AI used by clubs, media and betting firms for recruitment, performance and content",
    "source": {
     "type": "teamtailor",
     "id": "statsperform"
-   }
+   },
+   "advisory_type": "analytics"
   },
   {
    "name": "DAZN",
@@ -305,11 +313,12 @@
    "hq": "Lincoln / London",
    "website": "hudl.com",
    "careers_url": "https://www.hudl.com/jobs",
-   "why": "Performance analysis tech for clubs",
+   "why": "Video and data platform incl. StatsBomb data used by clubs for scouting, recruitment and opposition analysis",
    "source": {
     "type": "greenhouse",
     "id": "hudl"
-   }
+   },
+   "advisory_type": "analytics"
   },
   {
    "name": "Catapult",
@@ -317,11 +326,12 @@
    "hq": "Melbourne / Leeds",
    "website": "catapult.com",
    "careers_url": "https://www.catapult.com/careers",
-   "why": "Athlete performance tech",
+   "why": "Athlete-tracking and video analytics used by teams for performance and recruitment decisions",
    "source": {
     "type": "greenhouse",
     "id": "catapultsports"
-   }
+   },
+   "advisory_type": "analytics"
   },
   {
    "name": "Teamworks",
@@ -341,11 +351,12 @@
    "hq": "Dublin",
    "website": "kitmanlabs.com",
    "careers_url": "https://jobs.lever.co/kitmanlabs",
-   "why": "Performance intelligence platform",
+   "why": "Performance-intelligence platform used by clubs and leagues for player health, availability and squad decisions",
    "source": {
     "type": "lever",
     "id": "kitmanlabs"
-   }
+   },
+   "advisory_type": "analytics"
   },
   {
    "name": "Sorare",
@@ -627,6 +638,331 @@
     "pattern": "<tr[^>]*><td[^>]*><div[^>]*><div[^>]*>(?P<title>[^<]+)</div><div[^>]*>(?P<dept>[^<]+)</div>.*?href=\"(?P<url>/careers/vacancies/\\d+)\"",
     "default_location": "Brackley, UK"
    }
+  },
+  {
+   "name": "ColganBauer",
+   "advisory_type": "strategy",
+   "hq": "Melbourne",
+   "website": "colganbauer.com",
+   "careers_url": "https://colganbauer.com/",
+   "why": "Sports strategy consultancy since 2007: media rights valuation and market intelligence for leagues and governing bodies (e.g. AFL, Pakistan Cricket Board)",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "The Sports Consultancy",
+   "advisory_type": "strategy",
+   "hq": "London",
+   "website": "thesportsconsultancy.com",
+   "careers_url": "https://www.thesportsconsultancy.com/",
+   "why": "London sports advisory: event hosting, commercial strategy and governance for federations, cities and rights holders",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Elevate Sports Ventures",
+   "advisory_type": "strategy",
+   "hq": "London / Los Angeles",
+   "website": "elevatesportsventures.com",
+   "careers_url": "https://www.teamworkonline.com/multiple-properties/elevate-sport-ventures-careers/elevate-sports-ventures-jobs",
+   "why": "Sports commercial agency with an International Insights team in London: partnership strategy, premium sales and naming-rights advisory (posts on Teamwork Online)",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Iris Sport Media",
+   "advisory_type": "media",
+   "hq": "London / Paris",
+   "website": "",
+   "careers_url": "https://www.linkedin.com/jobs/search/?keywords=%22Iris%20Sport%20Media%22",
+   "why": "Media-rights agency and investment consultancy founded in 2023 by former IMG Media leaders; rights strategy and distribution",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Futures Sport + Entertainment",
+   "advisory_type": "research",
+   "hq": "London",
+   "website": "futuressport.com",
+   "careers_url": "https://www.futuressport.com/",
+   "why": "Fan, media and sponsorship research and valuation consultancy for rights holders and brands",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Gemba",
+   "advisory_type": "research",
+   "hq": "London / Sydney",
+   "website": "thegembagroup.com",
+   "careers_url": "https://www.thegembagroup.com/",
+   "why": "Fan-insight, sponsorship and commercial strategy consultancy for sports and entertainment properties",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Oliver & Ohlbaum (O&O)",
+   "advisory_type": "media",
+   "hq": "London",
+   "website": "oando.co.uk",
+   "careers_url": "https://www.oando.co.uk/careers",
+   "why": "London adviser to media, entertainment and sports: media-rights valuation, broadcaster strategy and deal support",
+   "source": {
+    "type": "html",
+    "id": "https://www.oando.co.uk/careers",
+    "pattern": "<a href=\"(?P<url>/\\d{4}-[^\"]+)\"[^>]*>(?P<title>[^<]+)</a>",
+    "default_location": "London"
+   },
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Altman Solon",
+   "advisory_type": "media",
+   "hq": "London / Boston",
+   "website": "altmansolon.com",
+   "careers_url": "https://apply.workable.com/altman-solon/",
+   "why": "TMT-specialist strategy consultancy: sports-rights monetisation, streaming and broadcaster strategy, media deal due diligence",
+   "source": {
+    "type": "workable",
+    "id": "altman-solon"
+   },
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "MTM (Brave Bison)",
+   "advisory_type": "media",
+   "hq": "London",
+   "website": "wearemtm.com",
+   "careers_url": "https://www.wearemtm.com/careers",
+   "why": "Media strategy and research consultancy for broadcasters, streamers and rights holders; part of Brave Bison",
+   "source": {
+    "type": "bamboohr",
+    "id": "bravebison"
+   },
+   "focus_keywords": "\\bmtm\\b",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Enders Analysis",
+   "advisory_type": "media",
+   "hq": "London",
+   "website": "endersanalysis.com",
+   "careers_url": "https://www.endersanalysis.com/about",
+   "why": "Independent media and telecoms research incl. sports-rights economics for broadcasters and investors",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Brand Finance",
+   "advisory_type": "media",
+   "hq": "London",
+   "website": "brandfinance.com",
+   "careers_url": "https://brandfinance.com/careers",
+   "why": "Brand and intangible-asset valuation; Sports Services team values clubs, sponsorships and media rights (Football 50)",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Chiron Sports Group",
+   "advisory_type": "media",
+   "hq": "London",
+   "website": "chironsportsgroup.com",
+   "careers_url": "https://www.chironsportsgroup.com/",
+   "why": "Sports media and commercial-rights advisory and sales for rights holders",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Twenty First Group",
+   "advisory_type": "analytics",
+   "hq": "London",
+   "website": "twentyfirstgroup.com",
+   "careers_url": "https://apply.workable.com/twenty-first-group/",
+   "why": "Sports intelligence and decision-science consultancy (ex-21st Club): recruitment, squad planning and performance strategy for clubs and leagues",
+   "source": {
+    "type": "workable",
+    "id": "twenty-first-group"
+   },
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Analytics FC",
+   "advisory_type": "analytics",
+   "hq": "London",
+   "website": "analyticsfc.co.uk",
+   "careers_url": "https://analyticsfc.co.uk/",
+   "why": "Football data consultancy behind TransferLab (with LCP): player recruitment analysis for clubs, federations and agencies",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "LCP Sports",
+   "advisory_type": "analytics",
+   "hq": "London",
+   "website": "lcp.com",
+   "careers_url": "https://www.lcp.com/en/careers",
+   "why": "Sports analytics and advisory practice at actuarial firm LCP: recruitment data (TransferLab), club finance and valuation",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Nielsen Sports",
+   "advisory_type": "research",
+   "category": "Media & Data",
+   "hq": "London",
+   "website": "nielsen.com",
+   "careers_url": "https://careers.smartrecruiters.com/TheNielsenCompany",
+   "why": "Sponsorship and media evaluation, fan research and rights valuation for leagues, clubs and brands",
+   "source": {
+    "type": "smartrecruiters",
+    "id": "TheNielsenCompany"
+   },
+   "focus_keywords": "\\bsports?\\b"
+  },
+  {
+   "name": "YouGov Sport",
+   "advisory_type": "research",
+   "category": "Media & Data",
+   "hq": "London",
+   "website": "yougov.com",
+   "careers_url": "https://jobs.yougov.com/",
+   "why": "Fan and sponsorship tracking research used by rights holders and sponsors"
+  },
+  {
+   "name": "Tifosy Capital & Advisory",
+   "advisory_type": "deals",
+   "hq": "London",
+   "website": "tifosy.com",
+   "careers_url": "https://www.tifosy.com/",
+   "why": "Sports investment and corporate-finance advisory: club and league fundraising, M&A and financing",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Inner Circle Sports",
+   "advisory_type": "deals",
+   "category": "Investors & Banks",
+   "hq": "New York",
+   "website": "innercirclesports.com",
+   "careers_url": "https://www.innercirclesports.com/",
+   "why": "Boutique investment bank dedicated to sports: team sales, stake sales and league transactions"
+  },
+  {
+   "name": "Houlihan Lokey",
+   "advisory_type": "deals",
+   "category": "Investors & Banks",
+   "hq": "London / Los Angeles",
+   "website": "hl.com",
+   "careers_url": "https://hl.com/about-us/careers/",
+   "why": "Investment bank with a sports and media M&A group (sports IP, club and media-asset deals)"
+  },
+  {
+   "name": "OC&C Strategy Consultants",
+   "advisory_type": "generalist",
+   "hq": "London",
+   "website": "occstrategy.com",
+   "careers_url": "https://www.occstrategy.com/en/careers",
+   "why": "Strategy consultancy with a TMT, sport and media practice serving operators and investors",
+   "source": {
+    "type": "bamboohr",
+    "id": "occstrategy"
+   },
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Ankura",
+   "advisory_type": "generalist",
+   "hq": "London / Washington",
+   "website": "ankura.com",
+   "careers_url": "https://ankura.wd5.myworkdayjobs.com/ankura",
+   "why": "Advisory firm with a Global Sports Advisory practice (London): valuation, due diligence, disputes and compliance for sports deals",
+   "source": {
+    "type": "workday",
+    "id": "ankura.wd5.myworkdayjobs.com|ankura|ankura"
+   },
+   "focus_keywords": "\\b(sports?|media|entertainment|football)\\b",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Brattle Group",
+   "advisory_type": "generalist",
+   "hq": "Boston / London",
+   "website": "brattle.com",
+   "careers_url": "https://www.brattle.com/careers/",
+   "why": "Economic consultancy with a sports practice: rights and franchise valuation, league economics and sports disputes",
+   "source": {
+    "type": "greenhouse",
+    "id": "thebrattlegroup"
+   },
+   "focus_keywords": "\\b(sports?|media|entertainment)\\b",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Simon-Kucher",
+   "advisory_type": "generalist",
+   "hq": "Bonn / London",
+   "website": "simon-kucher.com",
+   "careers_url": "https://www.simon-kucher.com/en/careers",
+   "why": "Pricing and growth consultancy; works on ticketing, membership and media pricing for sports and media clients",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Boston Consulting Group",
+   "advisory_type": "generalist",
+   "hq": "Boston / London",
+   "website": "bcg.com",
+   "careers_url": "https://careers.bcg.com/global/en/search-results?keywords=london",
+   "why": "Generalist strategy firm; TMT and media practices work on sports rights, streaming and club/league strategy. Hires generalist consultants",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Bain & Company",
+   "advisory_type": "generalist",
+   "hq": "Boston / London",
+   "website": "bain.com",
+   "careers_url": "https://www.bain.com/careers/find-a-role/?location=london",
+   "why": "Generalist strategy firm; TMT and private-equity practices support sports and media deals. Hires generalist consultants",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "McKinsey & Company",
+   "advisory_type": "generalist",
+   "hq": "New York / London",
+   "website": "mckinsey.com",
+   "careers_url": "https://www.mckinsey.com/careers/search-jobs?locations=London",
+   "why": "Generalist strategy firm; TMT and media practices advise on sports media and entertainment. Hires generalist consultants",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "KPMG Sports Advisory",
+   "advisory_type": "generalist",
+   "hq": "London / Budapest",
+   "website": "footballbenchmark.com",
+   "careers_url": "https://www.kpmg.com/uk/en/home/careers.html",
+   "why": "KPMG sports advisory incl. Football Benchmark: club valuations, financial benchmarking and deal support",
+   "category": "Consulting & Advisory"
+  },
+  {
+   "name": "PwC Sports Business Advisory",
+   "advisory_type": "generalist",
+   "hq": "London",
+   "website": "pwc.co.uk",
+   "careers_url": "https://www.pwc.co.uk/careers.html",
+   "why": "PwC sports advisory and deals teams: club and league transactions, valuations and sports strategy",
+   "category": "Consulting & Advisory"
   }
- ]
+ ],
+ "advisory_types": {
+  "strategy": [
+   "Sports strategy & commercial advisory",
+   "Advise clubs, leagues, federations and brands on strategy, commercial growth, fan engagement and sponsorship."
+  ],
+  "media": [
+   "Media, rights & valuation",
+   "Value and structure media rights, sponsorships and brands; advise broadcasters, streamers and investors."
+  ],
+  "analytics": [
+   "Performance & recruitment analytics",
+   "Data and decision-science firms that help clubs recruit players, plan squads and manage performance."
+  ],
+  "research": [
+   "Fan, sponsorship & market research",
+   "Audience, sponsorship-evaluation and fan research used to price and sell rights."
+  ],
+  "deals": [
+   "Sports M&A & investment advisory",
+   "Advise on club and stake sales, league investments and sports financing."
+  ],
+  "generalist": [
+   "Generalist firms with sports / TMT practices",
+   "Large strategy and advisory firms whose TMT, media or sports practices work on rights, valuations and deals. Client roles in those practices count, as do generalist consultant roles (the usual MBA route in); roles in unrelated practices are dropped. Firms with no public feed are linked for checking by hand."
+  ]
+ }
 }

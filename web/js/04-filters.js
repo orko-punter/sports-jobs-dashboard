@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------- filtering + sorting
-const DEFAULT_F = { scope: 'match', q: '', loc: [], sen: [], fn: [], cat: [], newOnly: false, savedOnly: false, showHidden: false, sort: 'relevance' };
+const DEFAULT_F = { scope: 'match', q: '', loc: [], sen: [], fn: [], cat: [], adv: [], newOnly: false, savedOnly: false, showHidden: false, sort: 'relevance' };
 let F = { ...DEFAULT_F, ...(S.filters || {}) };
-for (const k of ['loc', 'sen', 'fn', 'cat']) if (!Array.isArray(F[k])) F[k] = [];
+for (const k of ['loc', 'sen', 'fn', 'cat', 'adv']) if (!Array.isArray(F[k])) F[k] = [];
 const persistFilters = () => { S.filters = F; Store.save(); };
 
 // skip = one facet to ignore, so each facet's counts show what you would get by ticking that option
@@ -14,10 +14,11 @@ function applyFilters(jobs, f, skip) {
     if (skip !== 'sen' && f.sen.length && !f.sen.includes(j.sen)) return false;
     if (skip !== 'fn' && f.fn.length && !j.fns.some(x => f.fn.includes(x))) return false;
     if (skip !== 'cat' && f.cat.length && !f.cat.includes(j.category)) return false;
+    if (skip !== 'adv' && f.adv.length && !f.adv.includes(j.adv)) return false;
     if (f.newOnly && !j.new) return false;
     if (f.savedOnly && !isSaved(j.id)) return false;
     if (toks.length) {
-      const hay = `${j.title} ${j.company} ${j.location} ${j.loc} ${j.fns.join(' ')} ${j.dept} ${catLabel(j.category)}`.toLowerCase();
+      const hay = `${j.title} ${j.company} ${j.location} ${j.loc} ${j.fns.join(' ')} ${j.dept} ${catLabel(j.category)} ${j.adv ? advLabel(j.adv) : ''}`.toLowerCase();
       if (!toks.every(t => hay.includes(t))) return false;
     }
     return true;
@@ -31,7 +32,7 @@ const SORTS = {
   location: { label: 'Location', fn: (a, b) => LOCS.indexOf(a.loc) - LOCS.indexOf(b.loc) || a.location.localeCompare(b.location) || score(b) - score(a) },
 };
 const sortJobs = (jobs, key) => jobs.slice().sort((SORTS[key] || SORTS.relevance).fn);
-const activeFilterCount = f => f.loc.length + f.sen.length + f.fn.length + f.cat.length + (f.newOnly ? 1 : 0) + (f.savedOnly ? 1 : 0) + (f.q.trim() ? 1 : 0);
+const activeFilterCount = f => f.loc.length + f.sen.length + f.fn.length + f.cat.length + f.adv.length + (f.newOnly ? 1 : 0) + (f.savedOnly ? 1 : 0) + (f.q.trim() ? 1 : 0);
 
 // Jump to Explore with a preset (used by KPIs, insights, company pages)
 function goJobs(preset) {

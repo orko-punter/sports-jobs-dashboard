@@ -20,6 +20,7 @@ function vJobs() {
       ${group('sen', 'Seniority', SENS)}
       ${group('fn', 'Function', D.functions)}
       ${group('cat', 'Organisation type', cats, catLabel)}
+      ${group('adv', 'Consulting segment', ADV, advLabel)}
       <div class="fgroup"><h3>Show</h3>
         <label class="switch"><span>New since last refresh</span><input type="checkbox" data-t="newOnly"></label>
         <label class="switch"><span>Saved only</span><input type="checkbox" data-t="savedOnly"></label>
@@ -43,15 +44,15 @@ function vJobs() {
 function updateJobs() {
   const root = $('.explore'); if (!root) return;
   // facet counts
-  for (const key of ['loc', 'sen', 'fn', 'cat']) {
+  for (const key of ['loc', 'sen', 'fn', 'cat', 'adv']) {
     const pool = applyFilters(D.jobs, F, key);
     $$(`[data-opt^="${key}|"]`, root).forEach(el => {
       const v = el.querySelector('input').value;
-      const n = pool.filter(j => key === 'fn' ? j.fns.includes(v) : (key === 'loc' ? j.loc : key === 'sen' ? j.sen : j.category) === v).length;
+      const n = pool.filter(j => key === 'fn' ? j.fns.includes(v) : (key === 'loc' ? j.loc : key === 'sen' ? j.sen : key === 'adv' ? j.adv : j.category) === v).length;
       el.querySelector('[data-count]').textContent = n;
       el.querySelector('input').checked = F[key].includes(v);
       el.classList.toggle('zero', !n && !F[key].includes(v));
-      el.hidden = !n && !F[key].includes(v) && F.scope === 'match' && key !== 'fn';
+      el.hidden = !n && !F[key].includes(v) && (key === 'adv' || (F.scope === 'match' && key !== 'fn'));
     });
   }
   $$('[data-t]', root).forEach(el => { el.checked = !!F[el.dataset.t]; });
@@ -66,7 +67,7 @@ function updateJobs() {
 
   const chips = [];
   if (F.q.trim()) chips.push(['q', '', `“${F.q.trim()}”`]);
-  for (const k of ['loc', 'sen', 'fn', 'cat']) F[k].forEach(v => chips.push([k, v, k === 'cat' ? catLabel(v) : k === 'loc' ? LOC_LABEL[v] : v]));
+  for (const k of ['loc', 'sen', 'fn', 'cat', 'adv']) F[k].forEach(v => chips.push([k, v, k === 'cat' ? catLabel(v) : k === 'adv' ? advLabel(v) : k === 'loc' ? LOC_LABEL[v] : v]));
   if (F.newOnly) chips.push(['newOnly', '', 'New only']);
   if (F.savedOnly) chips.push(['savedOnly', '', 'Saved only']);
   $('#resbar').innerHTML = `<span><strong class="num">${res.length}</strong> ${res.length === 1 ? 'role' : 'roles'}${F.scope === 'match' ? ' matched' : ' in UK & Europe'}</span>

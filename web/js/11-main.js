@@ -4,6 +4,7 @@ const route = { view: null, panel: null, id: null };
 const VIEWS = {
   overview: { label: 'Overview', icon: 'home', render: vOverview },
   jobs: { label: 'Explore jobs', short: 'Jobs', icon: 'briefcase', render: vJobs, bind: bindJobs },
+  consulting: { label: 'Sports consulting', short: 'Consulting', icon: 'spark', render: vConsulting },
   companies: { label: 'Companies', icon: 'building', render: vCompanies, bind: () => { bindCoToolbar('cq', updateCompanies); updateCompanies(); } },
   network: { label: 'Networking', short: 'Network', icon: 'users', render: vNetwork, bind: () => { bindCoToolbar('nq', updateNetwork); updateNetwork(); } },
   saved: { label: 'Saved', icon: 'bookmark', render: vSaved },
@@ -15,7 +16,7 @@ function renderNav() {
   const nNew = D.matches.filter(j => j.new).length;
   if (nNew) counts.jobs = [`${nNew} new`, true];
   $('#nav').innerHTML = Object.entries(VIEWS).map(([k, v]) => `${k === 'about' ? '<div class="nav-sep"></div>' : ''}<a href="#/${k}" ${route.view === k ? 'aria-current="page"' : ''}>${ico(v.icon)}<span>${v.label}</span>${counts[k] && counts[k][0] ? `<span class="count ${counts[k][1] ? 'hot' : ''}">${counts[k][0]}</span>` : ''}</a>`).join('');
-  $('#tabbar').innerHTML = ['overview', 'jobs', 'companies', 'network', 'saved'].map(k => {
+  $('#tabbar').innerHTML = ['overview', 'jobs', 'consulting', 'companies', 'network', 'saved'].map(k => {
     const v = VIEWS[k], badge = k === 'saved' ? Object.keys(S.saved).length : k === 'jobs' ? nNew : 0;
     return `<a href="#/${k}" ${route.view === k ? 'aria-current="page"' : ''}>${ico(v.icon)}<span>${v.short || v.label}</span>${badge ? `<span class="badge">${badge}</span>` : ''}</a>`;
   }).join('');
@@ -67,7 +68,7 @@ function afterChange() {
   if (route.view === 'jobs') updateJobs();
   else if (route.view === 'companies') updateCompanies();
   else if (route.view === 'network') updateNetwork();
-  else if (route.view === 'saved' || route.view === 'overview') { $('#main').innerHTML = VIEWS[route.view].render(); window.scrollTo(0, y); }
+  else if (route.view === 'saved' || route.view === 'overview' || route.view === 'consulting') { $('#main').innerHTML = VIEWS[route.view].render(); window.scrollTo(0, y); }
   if (!$('#drawer').hidden) {
     const body = $('.d-body'), st = body ? body.scrollTop : 0;
     if (route.panel === 'job' && D.byId.has(route.id)) $('#drawer').innerHTML = jobPanel(D.byId.get(route.id));
@@ -103,6 +104,7 @@ document.addEventListener('click', e => {
     case 'rail-open': openRail(true); break;
     case 'rail-close': openRail(false); break;
     case 'saved-tab': S.savedTab = el.dataset.v; Store.save(); $('#main').innerHTML = vSaved(); break;
+    case 'cs': CS = el.dataset.v; $('#main').innerHTML = vConsulting(); break;
     case 'co-clear': CF = { q: '', cat: '', watch: false, sort: CF.sort }; renderView(); break;
   }
 });
