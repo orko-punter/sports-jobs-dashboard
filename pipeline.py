@@ -516,6 +516,17 @@ def load_seen():
         first_seen = {}  # older runs did not record dates
     return seen, first_run, first_seen
 
+def auth_config():
+    """Supabase settings for email sign-in, from auth.json or the SUPABASE_URL / SUPABASE_ANON_KEY
+    environment variables. Both are public values; None turns profiles off."""
+    try:
+        cfg = json.load(open(os.path.join(ROOT, "auth.json")))
+    except Exception:
+        cfg = {}
+    url = os.environ.get("SUPABASE_URL") or cfg.get("supabase_url", "")
+    key = os.environ.get("SUPABASE_ANON_KEY") or cfg.get("supabase_anon_key", "")
+    return {"url": url.rstrip("/"), "key": key} if url and key else None
+
 def build_page(data):
     """Inline web/styles.css, web/js/*.js and the data into web/index.html -> one self-contained page
     that works from disk (file://), on GitHub Pages, or anywhere else."""
@@ -527,6 +538,7 @@ def build_page(data):
     js = "(()=>{'use strict';\n" + "\n".join(open(os.path.join(jsdir, f)).read() for f in sorted(os.listdir(jsdir)) if f.endswith(".js")) + "\n})();"
     blob = json.dumps(data, separators=(",", ":")).replace("</", "<\\/")
     return (page.replace("/*__STYLES__*/", css)
+                .replace("/*__AUTH__*/null", json.dumps(auth_config()).replace("</", "<\\/"))
                 .replace("/*__APP__*/", js.replace("</script", "<\\/script"))
                 .replace("/*__DATA__*/null", blob))
 

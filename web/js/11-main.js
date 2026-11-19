@@ -8,6 +8,7 @@ const VIEWS = {
   saved: { label: 'Saved', render: vSaved, nav: true },
   start: { label: 'Your answers', render: vStart },
   about: { label: 'About the data', render: vAbout },
+  account: { label: 'Profile', render: vAccount, bind: bindAccount },
 };
 // links from earlier versions of the site keep working
 const ALIAS = { overview: 'for-you', consulting: 'companies', network: 'companies', explore: 'jobs' };
@@ -31,7 +32,7 @@ function renderView() {
   const v = VIEWS[route.view];
   $('#main').innerHTML = v.render();
   if (v.bind) v.bind();
-  renderNav(); renderBanner();
+  renderNav(); renderBanner(); paintAcct();
 }
 
 function onRoute() {
@@ -103,6 +104,7 @@ document.addEventListener('click', e => {
     case 'q-done': S.profile = QD; Store.save(); QD = null; if (route.view === 'for-you') { renderView(); window.scrollTo(0, 0); } else location.hash = '#/for-you'; break;
     case 'q-skip': S.profile = { ...DEFAULT_P }; Store.save(); QD = null; renderView(); window.scrollTo(0, 0); break;
     case 'q-cancel': QD = null; break;
+    case 'acct-back': case 'acct-resend': case 'acct-out': case 'acct-delete': accountAction(a); break;
     // For you
     case 'fy-sort': FY.sort = el.dataset.v; FY.n = 25; $('#main').innerHTML = vForYou(); break;
     case 'fy-more': FY.n += 25; refreshInPlace(); break;
@@ -146,7 +148,7 @@ function renderPalette() {
   if (!toks.length) {
     const viewed = S.viewed.map(id => D.byId.get(id)).filter(Boolean).slice(0, 5);
     groups = [['Recently viewed', viewed.map(j => ({ t: j.title, s: j.company, run: () => { location.hash = `#/${route.view}/job/${j.id}`; } }))],
-      ['Go to', Object.entries(VIEWS).filter(([k]) => k !== 'start').map(([k, v]) => ({ t: v.label, run: () => { location.hash = `#/${k}`; } }))]];
+      ['Go to', Object.entries(VIEWS).filter(([k]) => k !== 'start' && (k !== 'account' || authOn())).map(([k, v]) => ({ t: v.label, run: () => { location.hash = `#/${k}`; } }))]];
   } else {
     const js = sortJobs(D.jobs.filter(j => hit(`${j.title} ${j.company} ${j.location}`)), 'relevance').slice(0, 7);
     const cs = D.companies.filter(c => hit(`${c.name} ${c.category} ${c.hq}`)).slice(0, 5);
@@ -192,4 +194,5 @@ $('#theme-btn').addEventListener('click', () => { S.theme = effectiveDark() ? 'l
   renderFoot();
   window.addEventListener('hashchange', onRoute);
   onRoute();
+  if (authOn() && Auth.user) pullSync(false);
 })();

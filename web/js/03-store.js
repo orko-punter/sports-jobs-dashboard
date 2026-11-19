@@ -1,10 +1,10 @@
-// ---------------------------------------------------------------- user preferences (this browser only)
+// ---------------------------------------------------------------- user preferences (this browser, plus the profile when signed in)
 const Store = (() => {
   const KEY = 'touchline:v1';
-  const s = { saved: {}, hidden: {}, viewed: [], watch: [], profile: null, theme: null, savedTab: 'jobs' };
+  const s = { saved: {}, hidden: {}, viewed: [], watch: [], profile: null, name: '', theme: null, savedTab: 'jobs' };
   try { Object.assign(s, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { /* private mode: run without storage */ }
   delete s.filters; delete s.steps;
-  return { s, save() { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { /* ignore */ } } };
+  return { s, save() { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { /* ignore */ } queueSync(); } };
 })();
 const S = Store.s;
 const snap = j => ({ title: j.title, company: j.company, url: j.url, location: j.location, at: new Date().toISOString().slice(0, 10) });

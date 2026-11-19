@@ -28,6 +28,7 @@ so it works opened from disk, on GitHub Pages, or anywhere else, with no server 
 | `web/js/01-utils.js` | Helpers and constants |
 | `web/js/02-data.js` | Data loading, validation, de-duplication, relevance score |
 | `web/js/03-store.js` | Answers, saved and hidden jobs, watchlist (browser `localStorage`) |
+| `web/js/03b-account.js` | Optional profiles: email sign-in with a code, and syncing to Supabase |
 | `web/js/04-filters.js` | The viewer's answers, matching and sorting |
 | `web/js/05-components.js` | Job rows, toasts, copy and share |
 | `web/js/06…09-*.js` | Views: questions + For you, All jobs, Companies, Saved + About the data |
@@ -45,6 +46,7 @@ The JS files share one scope and are concatenated in filename order.
 - **Companies**: all companies grouped by type (consulting firms by segment), with a panel per company that holds
   open roles and LinkedIn routes to people
 - **Saved**: saved roles, watched companies and hidden roles
+- **Profile** (top right, when set up): sign in with an emailed code to keep answers, saved roles and watched companies on any device
 - **About the data** (footer link): freshness, rules, coverage table and limits
 
 Shareable links: `#/jobs/job/<id>` and `#/companies/company/<slug>` open a panel directly.
@@ -112,6 +114,24 @@ Role rules: at these firms consulting titles count even without a function keywo
 Manager, Senior Consultant, Insight, Valuation). At generalist firms only sport/media/TMT practice roles and pure
 generalist consultant roles count; roles in unrelated practices are dropped. On the site, picking
 "Consulting & Advisory" in the questions adds a follow-up for the segment, and Companies lists consulting firms by segment.
+
+## Profiles (email sign-in)
+
+Viewers can sign in with their email: they get a one-time code, and their answers, saved roles, hidden roles and
+watched companies are stored in a Supabase table so they load on any device. Without sign-in, everything stays in the browser.
+Profiles are off until `auth.json` is filled in. To turn them on:
+
+1. Create a free project at supabase.com
+2. **SQL Editor**: run `supabase/schema.sql` (creates `profiles`, where each person can read and write only their own row)
+3. **Authentication → Emails → Templates**: in both **Magic Link** and **Confirm signup**, put the code in the email,
+   for example `<p>Your Touchline code is <b>{{ .Token }}</b></p>` (the default templates only send a link)
+4. **Authentication → Emails → SMTP settings**: add your own email sender (e.g. Resend or Postmark). Supabase's built-in
+   sender is for testing and only sends a few emails an hour
+5. **Project Settings → API**: copy the project URL and the anon (publishable) key into `auth.json`. Both are public by
+   design; the row-level security in the schema is what protects the data. `SUPABASE_URL` and `SUPABASE_ANON_KEY`
+   environment variables override the file
+
+Then rebuild (`python3 pipeline.py --build`) or run the workflow. A **Sign in** button appears in the top bar.
 
 ## Adding a company
 

@@ -36,7 +36,7 @@ function vForYou() {
   const nNew = list.filter(j => j.new).length;
   return `<div class="view">
   <div class="head"><div><h1>${list.length ? `${plural(list.length, 'role')} for you` : 'Nothing fits right now'}</h1>
-    <p class="summary">${profileTags(p).map(esc).join('<span class="sep">·</span>')}<a class="link" href="#/start">Change answers</a></p></div>
+    <p class="summary">${profileTags(p).map(esc).join('<span class="sep">·</span>')}<a class="link" href="#/start">Change answers</a>${authOn() && !Auth.user ? '<a class="link" href="#/account">Save to your email</a>' : ''}</p></div>
     ${list.length > 1 ? `<div class="seg" role="group" aria-label="Sort"><button type="button" data-act="fy-sort" data-v="relevance" aria-pressed="${FY.sort === 'relevance'}">Best match</button><button type="button" data-act="fy-sort" data-v="newest" aria-pressed="${FY.sort === 'newest'}">Newest</button></div>` : ''}
   </div>
   ${nNew ? `<p class="muted" style="margin:-12px 0 16px;font-size:14px">${plural(nNew, 'new role')} since the last refresh.</p>` : ''}
