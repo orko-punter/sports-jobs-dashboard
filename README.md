@@ -6,6 +6,8 @@ agencies, rights holders, clubs, media/data companies and investors.
 
 ## How it works
 
+**Touchline** has two halves: a Python data engine and a static frontend.
+
 `pipeline.py` (Python standard library only):
 
 1. Loads the company shortlist from `companies.json`
@@ -13,15 +15,48 @@ agencies, rights holders, clubs, media/data companies and investors.
    SmartRecruiters, Pinpoint, Teamtailor, Workday, BambooHR, UKG, Applied, Oleeo, or the
    company's own vacancies page)
 3. Tags and filters by location (London > UK > Europe), seniority (post-MBA) and function
-4. Marks jobs that are new since the last run
-5. Writes the dashboard plus JSON files, with LinkedIn search links for alumni and hiring teams
+4. Marks jobs that are new since the last run, and records when each listing was first seen
+5. Writes the JSON files and builds the dashboard, with LinkedIn search links for alumni and hiring teams
+
+The frontend lives in `web/` and is inlined into one self-contained HTML file at build time,
+so it works opened from disk, on GitHub Pages, or anywhere else, with no server or backend:
+
+| File | Role |
+| --- | --- |
+| `web/index.html` | Page shell (sidebar, top bar, panels, palette) |
+| `web/styles.css` | Design tokens (light + dark) and components |
+| `web/js/01-utils.js` | Helpers and constants |
+| `web/js/02-data.js` | Data loading, validation, de-duplication, relevance score |
+| `web/js/03-store.js` | Saved jobs, hidden jobs, watchlist, history, steps (browser `localStorage`) |
+| `web/js/04-filters.js` | Filtering, faceted counts, sorting |
+| `web/js/05-components.js` | Job rows/cards, company cards, toasts, copy/share |
+| `web/js/06…09-*.js` | Views: Overview, Explore jobs, Companies + Networking, Saved + Methodology |
+| `web/js/10-drawer.js` | Job and company side panels |
+| `web/js/11-main.js` | Navigation, hash routing, keyboard shortcuts, ⌘K search, boot |
+
+The JS files share one scope and are concatenated in filename order.
+
+### Sections
+
+- **Overview**: headline numbers, top matches, recently discovered roles, a computed intelligence brief, roles by function/location/type, companies to explore
+- **Explore jobs**: search, faceted filters (location, seniority, function, organisation type, new, saved, hidden), sorting, and a detail panel per role with apply, copy, share, hide, networking links, an outreach note and a next-steps checklist
+- **Companies**: all companies grouped by type, including those with no open roles, with a detail panel per company
+- **Networking**: LinkedIn search routes per company (LBS alumni, recruiters, commercial, strategy, partnerships, hiring managers, your connections)
+- **Saved**: saved jobs (with progress), watchlist, recently viewed and hidden jobs
+- **Methodology**: freshness, feed errors, platforms, filtering rules, full coverage table, limitations
+
+Shareable links: `#/jobs/job/<id>` and `#/companies/company/<slug>` open a panel directly.
 
 ## Run it locally
 
 ```bash
-python3 pipeline.py
+cd ~/sports-jobs-dashboard
+python3 pipeline.py          # fetch everything and build
 open dashboard.html
 ```
+
+Working on the design only? `python3 pipeline.py --build` rebuilds the page from the last
+`data/jobs.json` in a second, without fetching anything.
 
 ## Hosted version
 
@@ -33,7 +68,8 @@ The **Refresh jobs** GitHub Action runs the pipeline and publishes `site/` to Gi
 | --- | --- |
 | `index.html` | The dashboard |
 | `new_jobs.json` | Matching roles that are new since the previous run (for alerts) |
-| `jobs.json` | Every UK/Europe job with tags, plus the company list |
+| `jobs.json` | Every UK/Europe job with tags (`match`, `posted_date`, `first_seen`), the company list and run `meta` |
+| `seen_urls.json`, `first_seen.json` | State for "new" detection and first-seen dates, read back by the next run |
 
 Trigger it from n8n (see below) or with **Actions → Refresh jobs → Run workflow** on GitHub.
 
@@ -55,3 +91,15 @@ Header Auth credential to the **Start GitHub refresh** node: name `Authorization
 
 Add an entry to `companies.json`. Give it a `source` if its careers site uses one of the
 supported systems; without one it appears on the dashboard as "check by hand".
+
+To show verified people on a company (instead of only search links), add a `contacts` list,
+for example `"contacts": [{"name": "…", "role": "…", "url": "https://www.linkedin.com/in/…", "note": "LBS MBA 2021"}]`.
+Only add people you have verified yourself.
+
+## Data honesty
+
+- Nothing is invented: every number on the page is computed from the latest run.
+- Missing data is labelled as missing (for example "Not given in the feed"), not shown as zero. Companies with failed feeds say so.
+- The page warns when data is more than 36 hours old.
+- Saved jobs that disappear from a later refresh stay in Saved, marked "Not in latest refresh".
+- People links are LinkedIn searches. LinkedIn is never scraped, and nobody is presented as an alumnus.

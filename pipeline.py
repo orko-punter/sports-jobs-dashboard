@@ -6,16 +6,17 @@ Steps
   2. Pull every open job from each company's careers system (public ATS feeds)
   3. Tag + filter jobs: location (London > Europe), seniority (post-MBA), function
   4. Attach "people to contact" search links per company / job
-  5. Write data/jobs.json and build dashboard.html
+  5. Write data/jobs.json and build the dashboard (web/ sources inlined into one HTML file)
 
 Usage:  python3 pipeline.py            # run everything
         python3 pipeline.py --check    # print a per-company source report only
+        python3 pipeline.py --build    # rebuild the page from the last data (no fetching)
 Standard library only - no installs needed.
 """
 import html, json, os, re, shutil, ssl, sys, time, urllib.parse, urllib.request
 import concurrent.futures as cf
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
@@ -298,21 +299,47 @@ def google(q):
     return "https://www.google.com/search?q=" + urllib.parse.quote(q)
 
 def people_links(company):
+    """LinkedIn / Google search links for getting into a company. Searches only: nothing is scraped,
+    and nobody is presented as an alumnus or contact unless LinkedIn's own results show it."""
     n = company.get("linkedin_name") or company["name"]
+    q = f'"{n}"'
     links = [
-        dict(label="LBS alumni here", url=li_people(f'"{n}" "London Business School"')),
-        dict(label="Recruiters / talent team", url=li_people(f'"{n}" talent acquisition')),
-        dict(label="Strategy & commercial team", url=li_people(f'"{n}" strategy OR commercial OR partnerships London')),
+        dict(key="lbs", label="LBS alumni", url=li_people(f'{q} "London Business School"')),
+        dict(key="recruiters", label="Recruiters / talent team", url=li_people(f"{q} talent acquisition OR recruiter")),
+        dict(key="commercial", label="Commercial leadership", url=li_people(f'{q} "chief commercial" OR "commercial director" OR "head of commercial"')),
+        dict(key="strategy", label="Strategy team", url=li_people(f"{q} strategy OR \"corporate development\"")),
+        dict(key="partnerships", label="Partnerships team", url=li_people(f"{q} partnerships OR sponsorship")),
+        dict(key="hiring", label="Hiring managers", url=li_people(f"{q} head OR director London")),
+        dict(key="connections", label="Your 1st/2nd-degree connections", url=li_people(q) + "&network=%5B%22F%22%2C%22S%22%5D"),
+        dict(key="employees", label="All employees", url=li_people(q)),
+        dict(key="company", label="LinkedIn company page", url="https://www.linkedin.com/search/results/companies/?keywords=" + urllib.parse.quote(n)),
+        dict(key="jobs", label="Jobs on LinkedIn", url="https://www.linkedin.com/jobs/search/?keywords=" + urllib.parse.quote(n) + "&location=" + urllib.parse.quote("United Kingdom")),
     ]
     if company.get("website"):
-        links.append(dict(label="Jobs on LinkedIn", url="https://www.linkedin.com/jobs/search/?keywords=" + urllib.parse.quote(n) + "&location=" + urllib.parse.quote("United Kingdom")))
-        links.append(dict(label="Team page on company site", url=google(f"site:{company['website']} team OR people OR leadership")))
+        links.append(dict(key="team_page", label="Team page on company site", url=google(f"site:{company['website']} team OR people OR leadership")))
     return links
 
 def job_people_link(company, job):
     n = company.get("linkedin_name") or company["name"]
     f = (job["functions"] or ["strategy"])[0].split(" & ")[0]
     return li_people(f'"{n}" {f} manager OR director OR head')
+
+def posted_date(posted, now):
+    """ISO date from the feed's posted value, or None when the feed gives none or only a range ("30+ days")."""
+    if not posted:
+        return None
+    m = re.match(r"(\d{4}-\d{2}-\d{2})", posted)
+    if m:
+        return m.group(1)
+    p = posted.lower()
+    if "today" in p:
+        return now.date().isoformat()
+    if "yesterday" in p:
+        return (now - timedelta(days=1)).date().isoformat()
+    m = re.search(r"(\d+) days? ago", p)
+    if m and "+" not in p:
+        return (now - timedelta(days=int(m.group(1)))).date().isoformat()
+    return None
 
 # ---------------------------------------------------------------- runner
 def run_company(c):
@@ -326,9 +353,21 @@ def run_company(c):
     except Exception as e:
         return c, [], f"error: {type(e).__name__}: {str(e)[:80]}"
 
+def rebuild_only():
+    """--build: regenerate the dashboard from the last data/jobs.json without fetching (for UI work)."""
+    data = json.load(open(os.path.join(ROOT, "data", "jobs.json")))
+    page = build_page(data)
+    open(os.path.join(ROOT, "dashboard.html"), "w").write(page)
+    os.makedirs(os.path.join(ROOT, "site"), exist_ok=True)
+    open(os.path.join(ROOT, "site", "index.html"), "w").write(page)
+    print("Rebuilt dashboard.html and site/index.html from data/jobs.json")
+
 def main():
+    if "--build" in sys.argv:
+        return rebuild_only()
     check = "--check" in sys.argv
-    companies = json.load(open(os.path.join(ROOT, "companies.json")))["companies"]
+    shortlist = json.load(open(os.path.join(ROOT, "companies.json")))
+    companies, rule = shortlist["companies"], shortlist.get("rule", "")
     print(f"Step 1  loaded {len(companies)} companies")
     with cf.ThreadPoolExecutor(16) as ex:
         results = list(ex.map(run_company, companies))
@@ -356,6 +395,7 @@ def main():
             kept += 1
         comp_out.append(dict(name=c["name"], category=c["category"], hq=c.get("hq", ""), website=c.get("website", ""),
                              careers_url=c.get("careers_url", ""), why=c.get("why", ""), status=status,
+                             linkedin_name=c.get("linkedin_name") or c["name"], contacts=c.get("contacts", []),
                              source=(c.get("source") or {}).get("type", "manual"),
                              jobs_total=len(jobs), jobs_europe=kept, people=people_links(c)))
     if check:
@@ -367,45 +407,82 @@ def main():
     # "New since last run": compare against every job URL seen before (kept across runs, so a feed that
     # fails one day doesn't make all its jobs look new the next). Previous state comes from the published
     # site when PREV_SITE_URL is set (GitHub Actions), otherwise from the local data/ folder.
-    seen, first_run = load_seen()
+    match_ids = {id(j) for j in match}
+    seen, first_run, first_seen = load_seen()
+    now = datetime.now(timezone.utc)
+    today = now.date().isoformat()
     for j in all_jobs:
         j["new"] = not first_run and j["url"] not in seen
+        j["match"] = id(j) in match_ids
+        j["posted_date"] = posted_date(j["posted"], now)
+        if j["url"] not in first_seen and (first_run or j["url"] not in seen):
+            first_seen[j["url"]] = today  # first time the tracker saw this listing
+        j["first_seen"] = first_seen.get(j["url"])  # None = seen before first-seen dates were recorded
     new_matches = [j for j in match if j["new"]]
     seen = sorted(seen | {j["url"] for j in all_jobs})
 
     order = {"London": 0, "UK": 1, "Remote": 2, "Europe": 3, "Unknown": 4}
     all_jobs.sort(key=lambda j: (not j["new"], order.get(j["loc_tag"], 9), j["posted"] == "", "".join(chr(255 - ord(ch)) for ch in j["posted"])))
-    generated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    data = dict(generated=generated, companies=comp_out, jobs=all_jobs)
+    generated = now.strftime("%Y-%m-%d %H:%M UTC")
+    live = [c for c in comp_out if c["status"].startswith("ok")]
+    meta = dict(generated_iso=now.isoformat(timespec="seconds"), companies=len(comp_out), live_sources=len(live),
+                manual=sum(1 for c in comp_out if c["status"] == "manual"),
+                errors=[dict(name=c["name"], status=c["status"]) for c in comp_out if c["status"].startswith("error")],
+                fetched=sum(c["jobs_total"] for c in comp_out), uk_europe=len(all_jobs), matches=len(match),
+                new_matches=len(new_matches), first_run=first_run, rule=rule, functions=list(FUNCTIONS))
+    data = dict(generated=generated, meta=meta, companies=comp_out, jobs=all_jobs)
     new_data = dict(generated=generated, count=len(new_matches), first_run=first_run,
                     jobs=[{k: j[k] for k in ("company", "title", "location", "loc_tag", "seniority", "functions", "url", "people_url")}
                           for j in new_matches])
-    tpl = open(os.path.join(ROOT, "dashboard_template.html")).read()
-    page = tpl.replace("/*__DATA__*/null", json.dumps(data).replace("</", "<\\/"))
+    page = build_page(data)
 
     os.makedirs(os.path.join(ROOT, "data"), exist_ok=True)
     json.dump(data, open(os.path.join(ROOT, "data", "jobs.json"), "w"), indent=1)
     json.dump(new_data, open(os.path.join(ROOT, "data", "new_jobs.json"), "w"), indent=1)
     json.dump(seen, open(os.path.join(ROOT, "data", "seen_urls.json"), "w"))
+    json.dump({u: d for u, d in first_seen.items() if u in set(seen)}, open(os.path.join(ROOT, "data", "first_seen.json"), "w"))
     open(os.path.join(ROOT, "dashboard.html"), "w").write(page)
 
     # site/ is what GitHub Pages serves: the dashboard plus JSON files n8n can read.
     site = os.path.join(ROOT, "site")
     os.makedirs(site, exist_ok=True)
-    open(os.path.join(site, "index.html"), "w").write('<!doctype html>\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + page)
-    for f in ("jobs.json", "new_jobs.json", "seen_urls.json"):
+    open(os.path.join(site, "index.html"), "w").write(page)
+    for f in ("jobs.json", "new_jobs.json", "seen_urls.json", "first_seen.json"):
         shutil.copy(os.path.join(ROOT, "data", f), os.path.join(site, f))
     print(f"Step 4  {len(new_matches)} new matches since last run" + (" (first run: nothing marked new)" if first_run else ""))
     print("Step 5  wrote dashboard.html, data/*.json and site/ (people links included)")
 
 def load_seen():
+    """Previous run's state: (seen URLs, first_run, {url: first-seen date}).
+    Read from the published site when PREV_SITE_URL is set (GitHub Actions), else from local data/."""
     url = os.environ.get("PREV_SITE_URL", "").rstrip("/")
-    try:
+    def read(name):
         if url:
-            return set(fetch_json(f"{url}/seen_urls.json")), False
-        return set(json.load(open(os.path.join(ROOT, "data", "seen_urls.json")))), False
+            return fetch_json(f"{url}/{name}")
+        return json.load(open(os.path.join(ROOT, "data", name)))
+    try:
+        seen, first_run = set(read("seen_urls.json")), False
     except Exception:
-        return set(), True
+        return set(), True, {}
+    try:
+        first_seen = dict(read("first_seen.json"))
+    except Exception:
+        first_seen = {}  # older runs did not record dates
+    return seen, first_run, first_seen
+
+def build_page(data):
+    """Inline web/styles.css, web/js/*.js and the data into web/index.html -> one self-contained page
+    that works from disk (file://), on GitHub Pages, or anywhere else."""
+    web = os.path.join(ROOT, "web")
+    page = open(os.path.join(web, "index.html")).read()
+    css = open(os.path.join(web, "styles.css")).read()
+    # web/js/*.js are modules sharing one scope (utils, data, store, filters, ui, views, main), in file order
+    jsdir = os.path.join(web, "js")
+    js = "(()=>{'use strict';\n" + "\n".join(open(os.path.join(jsdir, f)).read() for f in sorted(os.listdir(jsdir)) if f.endswith(".js")) + "\n})();"
+    blob = json.dumps(data, separators=(",", ":")).replace("</", "<\\/")
+    return (page.replace("/*__STYLES__*/", css)
+                .replace("/*__APP__*/", js.replace("</script", "<\\/script"))
+                .replace("/*__DATA__*/null", blob))
 
 if __name__ == "__main__":
     main()
