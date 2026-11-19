@@ -937,6 +937,486 @@
    "careers_url": "https://www.pwc.co.uk/careers.html",
    "why": "PwC sports advisory and deals teams: club and league transactions, valuations and sports strategy",
    "category": "Consulting & Advisory"
+  },
+  {
+   "name": "Brentford FC",
+   "category": "Clubs & Teams",
+   "hq": "London",
+   "website": "brentfordfc.com",
+   "careers_url": "https://brentfordfootballclub.wd107.myworkdayjobs.com/brentfordfc",
+   "why": "Premier League club in West London known for its data-led strategy; small commercial and strategy team",
+   "source": {
+    "type": "workday",
+    "id": "brentfordfootballclub.wd107.myworkdayjobs.com|brentfordfootballclub|brentfordfc"
+   }
+  },
+  {
+   "name": "Brighton & Hove Albion",
+   "category": "Clubs & Teams",
+   "hq": "Brighton",
+   "website": "brightonandhovealbion.com",
+   "careers_url": "https://jobs.dayforcehcm.com/en-gb/bhafc/candidateportal",
+   "why": "Premier League club with a data-driven model (owner Tony Bloom); commercial and strategy roles"
+  },
+  {
+   "name": "Everton FC",
+   "category": "Clubs & Teams",
+   "hq": "Liverpool",
+   "website": "evertonfc.com",
+   "careers_url": "https://careers.evertonfc.com",
+   "why": "Premier League club under new ownership (Friedkin Group) with a new stadium; commercial build-out"
+  },
+  {
+   "name": "Newcastle United",
+   "category": "Clubs & Teams",
+   "hq": "Newcastle",
+   "website": "nufc.co.uk",
+   "careers_url": "https://www.nufc.co.uk/club/careers",
+   "why": "PIF-owned Premier League club growing its commercial, partnerships and strategy teams"
+  },
+  {
+   "name": "Burnley FC",
+   "category": "Clubs & Teams",
+   "hq": "Burnley",
+   "website": "burnleyfootballclub.com",
+   "careers_url": "https://www.burnleyfootballclub.com/",
+   "why": "Club in a multi-club group (Velocity Sports Partners) with US ownership; commercial and strategy roles"
+  },
+  {
+   "name": "Birmingham City FC",
+   "category": "Clubs & Teams",
+   "hq": "Birmingham",
+   "website": "bcfc.com",
+   "careers_url": "https://www.bcfc.com/club/careers",
+   "why": "Club owned by Knighthead Capital (with Tom Brady) investing in commercial growth and a new stadium project"
+  },
+  {
+   "name": "Red Bull",
+   "category": "Clubs & Teams",
+   "hq": "Fuschl am See / Milton Keynes",
+   "website": "redbull.com",
+   "careers_url": "https://jobs.redbull.com",
+   "why": "Owns F1 teams (Red Bull Racing, VCARB) and football clubs (Leipzig, Salzburg); only racing, athlete, sport and partnership roles are counted, not drinks sales",
+   "source": {
+    "type": "smartrecruiters",
+    "id": "redbull"
+   },
+   "focus_keywords": "\\b(f1|racing|vcarb|athletes?|sports?|football|motorsport|partnerships?)\\b"
+  },
+  {
+   "name": "Fenway Sports Group",
+   "category": "Clubs & Teams",
+   "hq": "Boston",
+   "website": "fenwaysports.com",
+   "careers_url": "https://www.fenwaysports.com/careers",
+   "why": "Owner of Liverpool FC, Boston Red Sox and Pittsburgh Penguins; central strategy and investment team"
+  },
+  {
+   "name": "Harris Blitzer Sports & Entertainment",
+   "category": "Clubs & Teams",
+   "hq": "Philadelphia / New Jersey",
+   "website": "hbse.com",
+   "careers_url": "https://recruit.hirebridge.com/v3/CareerCenter/v2/?cid=8097",
+   "why": "Owns the 76ers, New Jersey Devils and a stake in Crystal Palace; US-based strategy and commercial roles"
+  },
+  {
+   "name": "Arizona Cardinals",
+   "category": "Clubs & Teams",
+   "hq": "Phoenix",
+   "website": "azcardinals.com",
+   "careers_url": "https://www.azcardinals.com/",
+   "why": "NFL club; US-based business operations roles"
+  },
+  {
+   "name": "Atlanta Hawks",
+   "category": "Clubs & Teams",
+   "hq": "Atlanta",
+   "website": "hawks.com",
+   "careers_url": "https://www.nba.com/hawks/",
+   "why": "NBA club and State Farm Arena; US-based business operations roles"
+  },
+  {
+   "name": "Cleveland Browns",
+   "category": "Clubs & Teams",
+   "hq": "Cleveland",
+   "website": "clevelandbrowns.com",
+   "careers_url": "https://www.clevelandbrowns.com/",
+   "why": "NFL club (Haslam Sports Group, also owners of Columbus Crew); US-based business roles"
+  },
+  {
+   "name": "Miami Dolphins & Hard Rock Stadium",
+   "category": "Clubs & Teams",
+   "hq": "Miami",
+   "website": "miamidolphins.com",
+   "careers_url": "https://www.miamidolphins.com/",
+   "why": "NFL club and stadium operator (also F1 Miami Grand Prix); US-based strategy and events roles"
+  },
+  {
+   "name": "Washington Nationals",
+   "category": "Clubs & Teams",
+   "hq": "Washington DC",
+   "website": "nationals.com",
+   "careers_url": "https://www.mlb.com/nationals/team/front-office/employment",
+   "why": "MLB club; US-based business operations roles"
+  },
+  {
+   "name": "FIFA",
+   "category": "Leagues & Rights Holders",
+   "hq": "Zurich",
+   "website": "fifa.com",
+   "careers_url": "https://jobs.fifa.com",
+   "why": "World football's governing body; strategy, commercial and event roles (mostly Zurich and World Cup host countries)",
+   "source": {
+    "type": "pinpoint",
+    "id": "fifa-careers"
+   }
+  },
+  {
+   "name": "English Football League",
+   "category": "Leagues & Rights Holders",
+   "hq": "Preston / London",
+   "website": "efl.com",
+   "careers_url": "https://www.efl.com/about-the-efl/jobs/",
+   "why": "Governing body for 72 clubs below the Premier League; commercial, media rights and strategy roles"
+  },
+  {
+   "name": "International Olympic Committee",
+   "category": "Leagues & Rights Holders",
+   "hq": "Lausanne",
+   "website": "olympics.com",
+   "careers_url": "https://www.olympics.com/ioc/jobs",
+   "why": "Owner of the Olympic Games; strategy, partnerships and media rights roles in Lausanne"
+  },
+  {
+   "name": "FIA",
+   "category": "Leagues & Rights Holders",
+   "hq": "Paris / Geneva",
+   "website": "fia.com",
+   "careers_url": "https://careers.fia.com/",
+   "why": "Motorsport governing body (F1, WEC, Formula E); commercial and strategy roles in Paris and Geneva"
+  },
+  {
+   "name": "Kings League",
+   "category": "Leagues & Rights Holders",
+   "hq": "Barcelona",
+   "website": "kingsleague.pro",
+   "careers_url": "https://kingsleague.pro/",
+   "why": "Creator-led seven-a-side football league (Gerard Piqué) expanding across Europe and the Americas"
+  },
+  {
+   "name": "Professional Squash Association",
+   "category": "Leagues & Rights Holders",
+   "hq": "Leeds / London",
+   "website": "psasquashtour.com",
+   "careers_url": "https://www.psasquashtour.com/careers/",
+   "why": "Governing body of pro squash, now on the LA28 Olympic programme; small commercial team"
+  },
+  {
+   "name": "Major League Soccer",
+   "category": "Leagues & Rights Holders",
+   "hq": "New York",
+   "website": "mlssoccer.com",
+   "careers_url": "https://www.mlssoccer.com/about/careers",
+   "why": "US football league; strategy, media and partnerships roles (US-based)"
+  },
+  {
+   "name": "NHL",
+   "category": "Leagues & Rights Holders",
+   "hq": "New York",
+   "website": "nhl.com",
+   "careers_url": "https://nhl.pinpointhq.com",
+   "why": "North American ice hockey league with international games in Europe; media and commercial roles",
+   "source": {
+    "type": "pinpoint",
+    "id": "nhl"
+   }
+  },
+  {
+   "name": "US Soccer Federation",
+   "category": "Leagues & Rights Holders",
+   "hq": "Chicago",
+   "website": "ussoccer.com",
+   "careers_url": "https://www.ussoccer.com/careers",
+   "why": "Governing body and 2026 World Cup co-host nation; US-based commercial and strategy roles"
+  },
+  {
+   "name": "Roc Nation Sports",
+   "category": "Agencies & Rights Marketing",
+   "hq": "New York / London",
+   "website": "rocnation.com",
+   "careers_url": "https://livenation.wd503.myworkdayjobs.com/rnexternalsite",
+   "why": "Athlete management and brand agency with a London-based international sports arm",
+   "source": {
+    "type": "workday",
+    "id": "livenation.wd503.myworkdayjobs.com|livenation|rnexternalsite"
+   }
+  },
+  {
+   "name": "CAA ICON",
+   "category": "Agencies & Rights Marketing",
+   "hq": "Denver / London",
+   "website": "caaicon.com",
+   "careers_url": "https://caa.wd1.myworkdayjobs.com/careers?q=icon",
+   "why": "Venue and stadium advisory (owner's representative, feasibility, strategy); London and Milan offices. Roles appear in the CAA Sports feed"
+  },
+  {
+   "name": "Gravity Media",
+   "category": "Agencies & Rights Marketing",
+   "hq": "London",
+   "website": "gravitymedia.com",
+   "careers_url": "https://www.gravitymedia.com/careers",
+   "why": "Broadcast production and media services for live sport"
+  },
+  {
+   "name": "LADbible Group",
+   "category": "Media & Data",
+   "hq": "Manchester / London",
+   "website": "ladbiblegroup.com",
+   "careers_url": "https://jobs.ladbiblegroup.com/jobs",
+   "why": "Social publisher behind SPORTbible and GiveMeSport; brand partnerships and commercial roles",
+   "source": {
+    "type": "teamtailor",
+    "id": "jobs.ladbiblegroup.com"
+   }
+  },
+  {
+   "name": "The Guardian",
+   "category": "Media & Data",
+   "hq": "London",
+   "website": "theguardian.com",
+   "careers_url": "https://workforus.theguardian.com/",
+   "why": "National publisher with a large sport desk; strategy and commercial roles"
+  },
+  {
+   "name": "TikTok",
+   "category": "Media & Data",
+   "hq": "London / Dublin",
+   "website": "tiktok.com",
+   "careers_url": "https://lifeattiktok.com/search?keyword=sports",
+   "why": "Sports partnerships team works with leagues, clubs and rights holders on content deals"
+  },
+  {
+   "name": "Amazon (Prime Video Sport / AWS)",
+   "category": "Media & Data",
+   "hq": "London / Seattle",
+   "website": "amazon.jobs",
+   "careers_url": "https://www.amazon.jobs/en/search?base_query=sports&loc_query=London",
+   "why": "Prime Video holds UK and European live sports rights; AWS has a sports partnerships team (F1, Bundesliga, NFL)"
+  },
+  {
+   "name": "Apple (Apple TV / MLS)",
+   "category": "Media & Data",
+   "hq": "Cupertino / London",
+   "website": "apple.com",
+   "careers_url": "https://jobs.apple.com/en-gb/search?search=sports",
+   "why": "Apple TV holds MLS and F1 rights; sports content and partnerships roles"
+  },
+  {
+   "name": "AXS",
+   "category": "Venues, Events & Ticketing",
+   "hq": "Los Angeles / London",
+   "website": "axs.com",
+   "careers_url": "https://boards.greenhouse.io/axs",
+   "why": "Ticketing platform (AEG) for arenas and stadiums, including The O2",
+   "source": {
+    "type": "greenhouse",
+    "id": "axs"
+   }
+  },
+  {
+   "name": "Fever",
+   "category": "Venues, Events & Ticketing",
+   "hq": "Madrid / London",
+   "website": "feverup.com",
+   "careers_url": "https://boards.greenhouse.io/feverup",
+   "why": "Live-entertainment discovery and ticketing platform; strategy and partnerships roles in Madrid and London. Only sport, sponsorship and strategy roles are counted",
+   "source": {
+    "type": "greenhouse",
+    "id": "feverup"
+   },
+   "focus_keywords": "\\b(sports?|football|stadium|sponsorship|brand partnerships?|m&a|value creation|corporate finance|business strategy)\\b"
+  },
+  {
+   "name": "London Stadium",
+   "category": "Venues, Events & Ticketing",
+   "hq": "London",
+   "website": "london-stadium.com",
+   "careers_url": "https://londonstadium.pinpointhq.com",
+   "why": "Home of West Ham United and major events; commercial and operations roles",
+   "source": {
+    "type": "pinpoint",
+    "id": "londonstadium"
+   }
+  },
+  {
+   "name": "Oak View Group",
+   "category": "Venues, Events & Ticketing",
+   "hq": "Los Angeles / Manchester",
+   "website": "oakviewgroup.com",
+   "careers_url": "https://careers-ovguk.icims.com",
+   "why": "Arena developer and operator (Co-op Live Manchester); UK venue strategy and commercial roles"
+  },
+  {
+   "name": "MCH Group",
+   "category": "Venues, Events & Ticketing",
+   "hq": "Basel",
+   "website": "mch-group.com",
+   "careers_url": "https://www.mch-group.com/en/careers",
+   "why": "Live marketing and events group (Art Basel); brand experience for sport"
+  },
+  {
+   "name": "Qiddiya",
+   "category": "Venues, Events & Ticketing",
+   "hq": "Riyadh",
+   "website": "qiddiya.com",
+   "careers_url": "https://qiddiya.com/careers/",
+   "why": "Saudi entertainment and sports city (venues, motorsport track, esports); strategy roles, Riyadh-based"
+  },
+  {
+   "name": "Nike",
+   "category": "Brands & Apparel",
+   "hq": "Beaverton / Hilversum / London",
+   "website": "nike.com",
+   "careers_url": "https://jobs.nike.com",
+   "why": "Largest sports brand; EMEA HQ in Hilversum; strategy, sports marketing and partnerships roles",
+   "source": {
+    "type": "workday",
+    "id": "nike.wd1.myworkdayjobs.com|nike|nke|strategy;sports marketing;partnerships;football;London;Hilversum"
+   },
+   "focus_keywords": "\\b(strategy|strategic|marketing|partnerships?|football|sports?|brand|merchandis\\w*|insights?|consumer)\\b"
+  },
+  {
+   "name": "Adidas",
+   "category": "Brands & Apparel",
+   "hq": "Herzogenaurach / Amsterdam",
+   "website": "adidas-group.com",
+   "careers_url": "https://careers.adidas-group.com/jobs?brand=adidas&keywords=strategy",
+   "why": "Global sports brand; strategy, sports marketing and partnerships roles in Germany and Amsterdam"
+  },
+  {
+   "name": "Puma",
+   "category": "Brands & Apparel",
+   "hq": "Herzogenaurach",
+   "website": "puma.com",
+   "careers_url": "https://about.puma.com/en/careers/job-openings",
+   "why": "Sports brand (listed as consulting in the sheet, but it's a brand); strategy and sports marketing roles"
+  },
+  {
+   "name": "Castore",
+   "category": "Brands & Apparel",
+   "hq": "Manchester / London",
+   "website": "castore.com",
+   "careers_url": "https://castore.com/pages/careers",
+   "why": "Fast-growing UK sportswear brand with club and F1 kit deals"
+  },
+  {
+   "name": "Fanatics",
+   "category": "Brands & Apparel",
+   "hq": "Jacksonville / New York / Manchester",
+   "website": "fanaticsinc.com",
+   "careers_url": "https://boards.greenhouse.io/fanaticsinc",
+   "why": "Licensed merchandise, trading cards and betting; UK commerce partnerships with clubs and leagues",
+   "source": {
+    "type": "greenhouse",
+    "id": "fanaticsinc"
+   }
+  },
+  {
+   "name": "Academy Sports + Outdoors",
+   "category": "Brands & Apparel",
+   "hq": "Katy, Texas",
+   "website": "academy.com",
+   "careers_url": "https://careers.academy.com",
+   "why": "US sports retailer; corporate strategy roles (US-based)"
+  },
+  {
+   "name": "Hawk-Eye Innovations",
+   "category": "Sports Tech & Platforms",
+   "hq": "Basingstoke / London",
+   "website": "hawkeyeinnovations.com",
+   "careers_url": "https://jobs.ashbyhq.com/hawkeyeinnovations",
+   "why": "Sony-owned officiating and tracking technology (VAR, line calling); commercial and partnerships roles",
+   "source": {
+    "type": "ashby",
+    "id": "hawkeyeinnovations"
+   }
+  },
+  {
+   "name": "WSC Sports",
+   "category": "Sports Tech & Platforms",
+   "hq": "Tel Aviv / London",
+   "website": "wsc-sports.com",
+   "careers_url": "https://wsc-sports.com/careers/",
+   "why": "AI video highlights platform used by leagues and broadcasters",
+   "source": {
+    "type": "html",
+    "id": "https://wsc-sports.com/careers/",
+    "pattern": "href=\"(?P<url>https://wsc-sports\\.com/career/[^\"]+)\">\\s*<div[^>]*>\\s*<span class=\"link-text\">(?P<title>[^<]+)</span>"
+   }
+  },
+  {
+   "name": "Ross Video",
+   "category": "Sports Tech & Platforms",
+   "hq": "Ottawa",
+   "website": "rossvideo.com",
+   "careers_url": "https://www.rossvideo.com/company/careers/",
+   "why": "Live production and stadium video technology"
+  },
+  {
+   "name": "GoRally",
+   "category": "Sports Tech & Platforms",
+   "hq": "London",
+   "website": "gorally.com",
+   "careers_url": "https://gorally.com/careers/",
+   "why": "Padel and racket-sports booking platform"
+  },
+  {
+   "name": "Maison Sport",
+   "category": "Sports Tech & Platforms",
+   "hq": "London",
+   "website": "maisonsport.com",
+   "careers_url": "https://www.maisonsport.com/",
+   "why": "Booking marketplace for ski and snowboard instructors"
+  },
+  {
+   "name": "Public Investment Fund (PIF)",
+   "category": "Investors & Banks",
+   "hq": "Riyadh",
+   "website": "pif.gov.sa",
+   "careers_url": "https://www.pif.gov.sa/en/careers/",
+   "why": "Saudi sovereign fund; owner of Newcastle United and LIV Golf, and sports investment platform SURJ"
+  },
+  {
+   "name": "TDR Capital",
+   "category": "Investors & Banks",
+   "hq": "London",
+   "website": "tdrcapital.com",
+   "careers_url": "https://www.tdrcapital.com/",
+   "why": "London private equity firm; leisure holdings such as David Lloyd Leisure"
+  },
+  {
+   "name": "Ares Management",
+   "category": "Investors & Banks",
+   "hq": "Los Angeles / London",
+   "website": "aresmgmt.com",
+   "careers_url": "https://www.aresmgmt.com/careers",
+   "why": "Alternative asset manager with a sports, media and entertainment strategy that invests in clubs, leagues and media"
+  },
+  {
+   "name": "Imbiba",
+   "category": "Investors & Banks",
+   "hq": "London",
+   "website": "imbiba.com",
+   "careers_url": "https://imbiba.com/",
+   "why": "London leisure private equity (hospitality and competitive socialising)"
+  },
+  {
+   "name": "SRG Capital",
+   "category": "Investors & Banks",
+   "hq": "London",
+   "website": "srgcapital.com",
+   "careers_url": "https://www.srgcapital.com",
+   "why": "Investment firm in the sheet; check the sports focus before reaching out"
   }
  ],
  "advisory_types": {

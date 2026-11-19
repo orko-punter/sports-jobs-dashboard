@@ -116,6 +116,10 @@ advisory and strategy roles at these firms, in-house strategy roles elsewhere, a
 Add an entry to `companies.json`. Give it a `source` if its careers site uses one of the
 supported systems; without one it appears on the dashboard as "check by hand".
 
+For large employers where sport is only part of the business (Nike, Red Bull, Fever, Ankura), add `focus_keywords`:
+a regex that a role's title or department must match. A Workday source can take a fourth field of search terms
+separated by `;` (e.g. `nike.wd1.myworkdayjobs.com|nike|nke|strategy;sports marketing`) when the full feed is too big to read.
+
 To show verified people on a company (instead of only search links), add a `contacts` list,
 for example `"contacts": [{"name": "…", "role": "…", "url": "https://www.linkedin.com/in/…", "note": "LBS MBA 2021"}]`.
 Only add people you have verified yourself.

@@ -142,24 +142,29 @@ def src_personio(slug):
             for p in root.iter("position")]
 
 def src_workday(spec):
-    """spec = 'host|tenant|site', e.g. 'wwecorp.wd5.myworkdayjobs.com|wwecorp|IMG'."""
+    """spec = 'host|tenant|site[|search]', e.g. 'wwecorp.wd5.myworkdayjobs.com|wwecorp|IMG'.
+    `search` may hold several terms separated by ';' (for very large employers); results are merged."""
     host, tenant, site, *rest = spec.split("|")
-    search = rest[0] if rest else ""
-    out, offset = [], 0
-    while True:
-        body = json.dumps({"appliedFacets": {}, "limit": 20, "offset": offset, "searchText": search}).encode()
-        d = fetch_json(f"https://{host}/wday/cxs/{tenant}/{site}/jobs", body)
-        for j in d.get("jobPostings", []):
-            if not j.get("title"):
-                continue
-            out.append(dict(title=j["title"], location=j.get("locationsText", ""),
-                            url=f"https://{host}/en-US/{site}{j.get('externalPath', '')}",
-                            posted=j.get("postedOn", ""), dept=""))
-        if offset == 0:
-            total = d.get("total", 0)  # Workday only reports the total on the first page
-        offset += 20
-        if offset >= total or offset >= 400 or not d.get("jobPostings"):
-            return out
+    out, seen = [], set()
+    for search in (rest[0].split(";") if rest else [""]):
+        offset = 0
+        while True:
+            body = json.dumps({"appliedFacets": {}, "limit": 20, "offset": offset, "searchText": search.strip()}).encode()
+            d = fetch_json(f"https://{host}/wday/cxs/{tenant}/{site}/jobs", body)
+            for j in d.get("jobPostings", []):
+                url = f"https://{host}/en-US/{site}{j.get('externalPath', '')}"
+                if not j.get("title") or url in seen:
+                    continue
+                seen.add(url)
+                out.append(dict(title=j["title"], location=j.get("locationsText", ""), url=url,
+                                posted=j.get("postedOn", ""), dept=""))
+            if offset == 0:
+                total = d.get("total", 0)  # Workday only reports the total on the first page
+            offset += 20
+            if offset >= total or offset >= 400 or not d.get("jobPostings"):
+                break
+    return out
+
 
 SOURCES = dict(greenhouse=src_greenhouse, lever=src_lever, ashby=src_ashby, workable=src_workable,
                smartrecruiters=src_smartrecruiters, pinpoint=src_pinpoint, teamtailor=src_teamtailor,

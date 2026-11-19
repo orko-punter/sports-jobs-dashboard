@@ -41,6 +41,9 @@ const CATS = [
   ['Clubs & Teams', 'Clubs & Teams'],
   ['Media & Data', 'Media & Data'],
   ['Investors & Banks', 'Investors & Banks'],
+  ['Brands & Apparel', 'Brands & Apparel'],
+  ['Venues, Events & Ticketing', 'Venues, Events & Ticketing'],
+  ['Sports Tech & Platforms', 'Sports Tech & Platforms'],
 ];
 const catLabel = c => (CATS.find(x => x[0] === c) || [c, c])[1];
 const ADV = ['strategy', 'media', 'analytics', 'research', 'deals', 'generalist'];
