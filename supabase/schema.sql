@@ -53,3 +53,30 @@ grant usage on schema public to anon, authenticated;
 grant select, insert, update, delete on public.profiles to authenticated;
 grant select on public.qa_posts to anon, authenticated;
 grant insert, delete on public.qa_posts to authenticated;
+
+-- ---------------------------------------------------------------- London Business School only
+-- Only @london.edu addresses can create an account. Enforced here, so it holds even if someone bypasses the site.
+create or replace function public.only_lbs_emails() returns trigger
+language plpgsql security definer set search_path = '' as $$
+begin
+  if new.email is null or lower(new.email) not like '%@london.edu' then
+    raise exception 'Only london.edu email addresses can sign up';
+  end if;
+  return new;
+end $$;
+
+drop trigger if exists only_lbs_emails on auth.users;
+create trigger only_lbs_emails before insert or update of email on auth.users
+  for each row execute function public.only_lbs_emails();
+
+-- And belt-and-braces: writing needs a signed-in london.edu address too.
+create or replace function public.is_lbs() returns boolean
+language sql stable as $$ select coalesce(lower(auth.jwt() ->> 'email') like '%@london.edu', false) $$;
+
+drop policy if exists "insert own profile" on public.profiles;
+drop policy if exists "update own profile" on public.profiles;
+create policy "insert own profile" on public.profiles for insert with check (auth.uid() = id and public.is_lbs());
+create policy "update own profile" on public.profiles for update using (auth.uid() = id) with check (auth.uid() = id and public.is_lbs());
+
+drop policy if exists "post as yourself" on public.qa_posts;
+create policy "post as yourself" on public.qa_posts for insert to authenticated with check (auth.uid() = user_id and public.is_lbs());

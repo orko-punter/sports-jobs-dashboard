@@ -167,13 +167,13 @@ function vAccount() {
       <p class="muted small acct-alt"><button class="link" type="button" data-act="acct-resend">Send a new code</button><span class="sep">·</span><button class="link" type="button" data-act="acct-back">Use a different email</button></p></div>`;
   }
   return `<div class="view narrow"><div class="head"><div><h1>Save your profile</h1>
-    <p class="lede">Sign in with your email to keep your answers, saved roles and watched companies, and pick them up on any device. No password: we email you a code.</p></div></div>
+    <p class="lede">Sign in with your <b>@london.edu</b> email to keep your answers, saved roles and watched companies, and pick them up on any device. No password: we email you a code.</p></div></div>
     <form class="acct-form" id="acct-form" data-step="email" novalidate>
       <label for="acct-email">Email</label>
       <div class="acct-row"><input class="field" id="acct-email" name="email" type="email" autocomplete="email" placeholder="you@london.edu" value="${esc(AC.email)}" required>
       <button class="btn primary" type="submit" ${AC.busy ? 'disabled' : ''}>${AC.busy ? 'Sending…' : 'Send code'}</button></div>${err}
     </form>
-    <p class="muted small">Your email is used only to sign you in. Nothing is shared, and you can delete your profile at any time.</p></div>`;
+    <p class="muted small">Only London Business School addresses can sign in. Your email is used only to sign you in. Nothing is shared, and you can delete your profile at any time.</p></div>`;
 }
 
 // Returning from the email link: #access_token=…&refresh_token=… (or #error=…)
@@ -188,12 +188,15 @@ async function consumeAuthLink() {
 }
 
 function friendlyAuthError(e) {
+  if (/london\.edu|saving new user/i.test(e.message)) return 'Touchline is for London Business School only. Use your @london.edu email.';
   if (e.status === 429 || /rate limit|security purposes/i.test(e.message)) return 'Too many codes requested. Wait a minute and try again.';
   if (/expired|invalid/i.test(e.message) || e.code === 'otp_expired') return 'That code is wrong or has expired. Check it, or send a new one.';
   if (e instanceof TypeError) return 'Could not reach the sign-in service. Check your connection.';
   return e.message;
 }
+const isLbs = email => /@london\.edu$/i.test(email.trim());
 async function sendCode(email) {
+  if (!isLbs(email)) { AC.email = email; AC.err = 'Touchline is for London Business School only. Use your @london.edu email.'; renderView(); const f = $('#acct-email'); if (f) f.focus(); return; }
   AC.busy = true; AC.err = ''; AC.email = email; renderView();
   try { await Auth.sendCode(email); AC.step = 'code'; AC.sentAt = Date.now(); }
   catch (e) { AC.err = friendlyAuthError(e); }

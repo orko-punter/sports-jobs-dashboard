@@ -49,7 +49,7 @@ function qaPanelHtml() {
         <div class="qa-row"><span class="muted small">Posting as <b>${esc(qaAuthor())}</b> · <a class="link" href="#/account">Change</a></span>
         <button class="btn sm primary" type="submit" ${QA.busy ? 'disabled' : ''}>${QA.busy ? 'Posting…' : 'Ask'}</button></div>
       </form>`
-    : `<div class="qa-signin"><p>Ask the cohort about companies, roles and interviews. Sign in with your email to ask or answer.</p>
+    : `<div class="qa-signin"><p>Ask the cohort about companies, roles and interviews. Sign in with your @london.edu email to ask or answer.</p>
         <a class="btn sm primary" href="#/account">Sign in to ask</a></div>`;
   return `<div class="qa-box" role="complementary" aria-labelledby="qa-title">
     <div class="qa-head"><div><span class="eyebrow">Ask the cohort</span><h2 id="qa-title">Questions <em>&amp; answers</em></h2></div>
