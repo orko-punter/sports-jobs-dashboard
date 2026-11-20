@@ -63,6 +63,13 @@ const CAT_HINT = {
   'Brands & Apparel': 'Kit makers and sponsor brands', 'Venues, Events & Ticketing': 'Stadiums, live events and ticketing',
   'Sports Tech & Platforms': 'Officiating, video and fan platforms',
 };
+// ...and a soft pastel of the same colour for card backgrounds
+const CAT_TINT = {
+  'Consulting & Advisory': '#ffdcc8', 'Agencies & Rights Marketing': '#d7e5ff', 'Leagues & Rights Holders': '#cdeecd',
+  'Clubs & Teams': '#ffd3df', 'Media & Data': '#e4d9ff', 'Investors & Banks': '#ffeba8', 'Brands & Apparel': '#c8f0ec',
+  'Venues, Events & Ticketing': '#efdcc9', 'Sports Tech & Platforms': '#dadeff',
+};
+const catTint = c => CAT_TINT[c] || '#e7e4dc';
 const catColor = c => CAT_COLOR[c] || '#8a877d';
 const catLabel = c => (CATS.find(x => x[0] === c) || [c, c])[1];
 const ADV = ['strategy', 'media', 'analytics', 'research', 'deals', 'generalist'];

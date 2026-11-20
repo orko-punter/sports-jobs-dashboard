@@ -4,7 +4,7 @@ const CF = { q: '', watch: false, open: {} };
 function vCompanies() {
   const live = D.companies.filter(c => c.live).length;
   return `<div class="view">
-  <div class="head"><div><span class="eyebrow">Who's hiring</span><h1>Companies</h1>
+  <div class="head"><div><span class="eyebrow">Who's hiring</span><h1>Who's <em>hiring</em></h1>
     <p class="lede"><b>${D.companies.length}</b> sport business employers. ${live} have job feeds we read every day; for the rest, check their careers site.</p></div></div>
   <div class="toolbar" style="margin-bottom:20px">
     <label class="search"><span class="sr">Search companies</span>${ico('search', 'i-sm')}<input id="cq" type="search" placeholder="Search companies…" value="${esc(CF.q)}" autocomplete="off"></label>

@@ -30,7 +30,8 @@ so it works opened from disk, on GitHub Pages, or anywhere else, with no server 
 | `web/js/03-store.js` | Answers, saved and hidden jobs, watchlist (browser `localStorage`) |
 | `web/js/03b-account.js` | Optional profiles: email sign-in with a code, and syncing to Supabase |
 | `web/js/04-filters.js` | The viewer's answers, matching and sorting |
-| `web/js/05-components.js` | Job rows, toasts, copy and share |
+| `web/js/05-components.js` | Job cards, toasts, copy and share |
+| `web/js/05b-home.js` | Home page: hero, 3D ring of hiring companies, count-up numbers, scroll-reveal text, pastel category cards |
 | `web/js/06…09-*.js` | Views: questions + For you, All jobs, Companies, Saved + About the data |
 | `web/js/10-drawer.js` | Job and company panels |
 | `web/js/11-main.js` | Navigation, hash routing, keyboard shortcuts, ⌘K search, boot |
@@ -39,6 +40,7 @@ The JS files share one scope and are concatenated in filename order.
 
 ### Sections
 
+- **Home**: the front page, with companies hiring now, headline numbers and a card per kind of organisation
 - **For you**: first-time visitors answer four questions (kind of work, where, kind of organisation, level; plus
   the consulting segment if they pick consulting). Only roles that fit are shown; answers can be changed any time
 - **All jobs**: every matched role, grouped by organisation type, function, location or company, with search and

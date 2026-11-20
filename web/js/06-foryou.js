@@ -7,12 +7,12 @@ function qSteps() {
   const cats = CATS.map(c => c[0]).filter(c => D.matches.some(j => j.category === c));
   const advs = ADV.filter(k => D.matches.some(j => j.category === CONSULTING && j.adv === k));
   const s = [
-    { k: 'fn', t: 'What kind of work?', h: 'Pick as many as you like. Pick none to keep every function.', opts: D.functions.map(f => [f, f]) },
-    { k: 'loc', t: 'Where do you want to be?', h: 'Every role is in London, the rest of the UK, mainland Europe or remote.', opts: Q_LOCS },
-    { k: 'cat', t: 'What kind of organisation?', h: 'From clubs and leagues to the consultancies, agencies and investors around them.', opts: cats.map(c => [c, catLabel(c), CAT_HINT[c] || '']) },
+    { k: 'fn', t: 'What kind of <em>work</em>?', h: 'Pick as many as you like. Pick none to keep every function.', opts: D.functions.map(f => [f, f]) },
+    { k: 'loc', t: 'Where do you want to <em>be</em>?', h: 'Every role is in London, the rest of the UK, mainland Europe or remote.', opts: Q_LOCS },
+    { k: 'cat', t: 'What kind of <em>organisation</em>?', h: 'From clubs and leagues to the consultancies, agencies and investors around them.', opts: cats.map(c => [c, catLabel(c), CAT_HINT[c] || '']) },
   ];
-  if (QD.cat.includes(CONSULTING) && advs.length) s.push({ k: 'adv', t: 'Which kind of consulting?', h: 'Firms are grouped by what they actually do for sport.', opts: advs.map(k => [k, advLabel(k), advDesc(k)]) });
-  s.push({ k: 'stretch', t: 'How senior?', h: 'Stretch roles are a step up, and reachable with strong pre-MBA experience.', opts: [['0', 'Post-MBA level', 'Manager, associate, consultant, lead'], ['1', 'Include stretch roles', 'Also Head of, director, principal']] });
+  if (QD.cat.includes(CONSULTING) && advs.length) s.push({ k: 'adv', t: 'Which kind of <em>consulting</em>?', h: 'Firms are grouped by what they actually do for sport.', opts: advs.map(k => [k, advLabel(k), advDesc(k)]) });
+  s.push({ k: 'stretch', t: 'How <em>senior</em>?', h: 'Stretch roles are a step up, and reachable with strong pre-MBA experience.', opts: [['0', 'Post-MBA level', 'Manager, associate, consultant, lead'], ['1', 'Include stretch roles', 'Also Head of, director, principal']] });
   return s;
 }
 
@@ -29,11 +29,11 @@ function vStart() {
     return `<button class="tile${c ? '' : ' zero'}" type="button" data-act="${isStretch ? 'q-stretch' : 'q'}" data-k="${st.k}" data-v="${esc(v)}" aria-pressed="${on(v)}">
       <span class="tick" aria-hidden="true">${ico('check', 'i-sm')}</span><b>${esc(l)}</b>${d ? `<small>${esc(d)}</small>` : ''}<span class="tc num">${plural(c, 'role')}</span></button>`; }).join('');
   return `<div class="view qs">
-  <div class="q-top"><div class="progress">${steps.map((s, i) => `<button class="pseg ${i < QSTEP ? 'done' : i === QSTEP ? 'cur' : ''}" type="button" data-act="q-goto" data-step="${i}" aria-label="Question ${i + 1}: ${esc(s.t)}"></button>`).join('')}</div>
+  <div class="q-top"><div class="progress">${steps.map((s, i) => `<button class="pseg ${i < QSTEP ? 'done' : i === QSTEP ? 'cur' : ''}" type="button" data-act="q-goto" data-step="${i}" aria-label="Question ${i + 1}: ${esc(s.t.replace(/<[^>]+>/g, ''))}"></button>`).join('')}</div>
     <span class="eyebrow">Question ${QSTEP + 1} of ${steps.length}</span></div>
-  <h1 class="q-title" tabindex="-1">${esc(st.t)}</h1>
+  <h1 class="q-title" tabindex="-1">${st.t}</h1>
   <p class="lede">${esc(st.h)}</p>
-  <div class="tiles" role="group" aria-label="${esc(st.t)}">${tiles}</div>
+  <div class="tiles" role="group" aria-label="${esc(st.t.replace(/<[^>]+>/g, ''))}">${tiles}</div>
   ${!isStretch && QD[st.k].length ? `<button class="link q-any" type="button" data-act="q-any" data-k="${st.k}">Clear: any is fine</button>` : ''}
   <div class="q-foot">
     <div class="q-count" aria-live="polite"><span class="big num" id="q-n">${n}</span><span>${n === 1 ? 'role matches' : 'roles match'}<br>your answers</span></div>
@@ -61,7 +61,7 @@ function vForYou() {
   <section class="board">
     <div>
       <span class="eyebrow">Your shortlist</span>
-      <div class="score"><span class="big num">${list.length}</span><span class="score-l">${list.length === 1 ? 'role' : 'roles'}<br>for you</span></div>
+      <div class="score"><span class="big num">${list.length}</span><span class="score-l">${list.length === 1 ? 'role' : 'roles'}<br><em>for you</em></span></div>
       <div class="answers">${tags.map((t, i) => `<button class="ans" type="button" data-act="q-edit" data-step="${stepOf(i)}" title="Change this answer">${esc(t)}${ico('arrow', 'i-sm')}</button>`).join('')}</div>
     </div>
     <div class="board-side">

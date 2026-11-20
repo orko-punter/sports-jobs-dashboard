@@ -13,7 +13,7 @@ const watchBtn = (c, cls = 'btn sm') =>
 
 function jobRow(j) {
   const fn = j.fns[0] || '';
-  return `<article class="job${isHidden(j.id) ? ' is-hidden' : ''}${S.viewed.includes(j.id) ? ' seen' : ''}" style="--cat:${catColor(j.category)}">
+  return `<article class="job${isHidden(j.id) ? ' is-hidden' : ''}${S.viewed.includes(j.id) ? ' seen' : ''}" style="--cat:${catColor(j.category)};--tint:${catTint(j.category)}">
     <button class="hit" type="button" data-act="open-job" data-id="${j.id}" aria-label="${esc(j.title)} at ${esc(j.company)}"></button>
     <div class="job-main">
       <div class="kicker"><span class="cat">${esc(CAT_SHORT[j.category] || catLabel(j.category))}</span>${j.new ? '<span class="new">New</span>' : ''}${j.sen === 'Stretch' ? '<span class="tag">Stretch</span>' : ''}${!j.match ? '<span class="tag">Outside the rules</span>' : ''}</div>

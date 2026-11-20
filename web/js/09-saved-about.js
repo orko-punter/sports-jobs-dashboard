@@ -22,7 +22,7 @@ function vSaved() {
     body = ids.length ? `<div class="jobs">${ids.map(id => D.byId.get(id) ? jobRow(D.byId.get(id)) : goneRow(id, S.hidden[id], 'unhide')).join('')}</div>`
       : emptyState('No hidden roles', 'Roles you hide from a job page are kept here, never deleted.');
   }
-  return `<div class="view"><div class="head"><div><span class="eyebrow">Your bench</span><h1>Saved</h1><p class="lede">${!authOn() ? 'Kept in this browser only. Nothing is uploaded.' : Auth.user ? `Saved to your profile (${esc(Auth.user.email)}), so they follow you to any device.` : 'Kept in this browser. <a class="link" href="#/account">Sign in with your email</a> to keep them on any device.'}</p></div></div>
+  return `<div class="view"><div class="head"><div><span class="eyebrow">Your bench</span><h1>Your <em>saved</em> roles</h1><p class="lede">${!authOn() ? 'Kept in this browser only. Nothing is uploaded.' : Auth.user ? `Saved to your profile (${esc(Auth.user.email)}), so they follow you to any device.` : 'Kept in this browser. <a class="link" href="#/account">Sign in with your email</a> to keep them on any device.'}</p></div></div>
     <div class="tabs" role="tablist">${tabs.map(([k, l, n]) => `<button type="button" role="tab" aria-selected="${k === t}" data-act="saved-tab" data-v="${k}">${l}<span class="c">${n}</span></button>`).join('')}</div>${body}</div>`;
 }
 

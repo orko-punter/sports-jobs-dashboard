@@ -2,6 +2,7 @@
 let D = null;
 const route = { view: null, panel: null, id: null };
 const VIEWS = {
+  home: { label: 'Home', render: vHome, bind: bindHome },
   'for-you': { label: 'For you', render: vForYou, nav: true },
   jobs: { label: 'All jobs', render: vAll, bind: bindAll, nav: true },
   companies: { label: 'Companies', render: vCompanies, bind: bindCompanies, nav: true },
@@ -30,7 +31,10 @@ function renderBanner() {
 
 function renderView() {
   const v = VIEWS[route.view];
+  $('#main').classList.toggle('full', route.view === 'home');
+  document.body.classList.toggle('on-dark', route.view === 'home');
   $('#main').innerHTML = v.render();
+  const el = $('#main > .view'); if (el) { el.classList.add('enter'); setTimeout(() => el.classList.remove('enter'), 700); }
   if (v.bind) v.bind();
   renderNav(); renderBanner(); paintAcct();
 }
@@ -38,7 +42,7 @@ function renderView() {
 function onRoute() {
   const [rawView, panel, id] = location.hash.replace(/^#\/?/, '').split('/');
   const view = ALIAS[rawView] || rawView;
-  const nextView = VIEWS[view] ? view : 'for-you';
+  const nextView = VIEWS[view] ? view : 'home';
   const changed = nextView !== route.view;
   route.view = nextView; route.panel = panel || null; route.id = id ? decodeURIComponent(id) : null;
   if (changed) {
@@ -62,6 +66,7 @@ function onRoute() {
 function refreshInPlace() {
   const y = window.scrollY;
   if (route.view === 'jobs') updateAll();
+  else if (route.view === 'home') { $('#main').innerHTML = vHome(); bindHome(); $$('.home .rv').forEach(e => e.classList.add('in')); }
   else if (route.view === 'companies') updateCompanies();
   else $('#main').innerHTML = VIEWS[route.view].render();
   window.scrollTo(0, y);
@@ -82,14 +87,6 @@ function qRedraw() {
   const y = window.scrollY, before = $('#q-n') ? $('#q-n').textContent : '';
   $('#main').innerHTML = vStart(); window.scrollTo(0, y);
   const n = $('#q-n'); if (n && n.textContent !== before) n.classList.add('bump');
-}
-
-// The ticker under the top bar: the newest matched roles, looping
-function renderTicker() {
-  const items = sortJobs(D.matches.filter(j => !isHidden(j.id)), 'newest').slice(0, 14);
-  if (!items.length) { $('#ticker').innerHTML = ''; return; }
-  const run = copy => items.map(j => `<button type="button" class="tk" data-act="open-job" data-id="${j.id}" ${copy ? 'tabindex="-1" aria-hidden="true"' : ''}>${j.new ? '<b class="tk-new">New</b>' : ''}<span class="tk-t">${esc(j.title)}</span><span class="tk-c">${esc(j.company)}</span></button><span class="tk-dot" aria-hidden="true">/</span>`).join('');
-  $('#ticker').innerHTML = `<div class="ticker" role="region" aria-label="Latest roles"><span class="live">Latest</span><div class="tk-track"><div class="tk-run">${run(false)}${run(true)}</div></div></div>`;
 }
 
 const go = (panel, id) => { location.hash = `#/${route.view}/${panel}/${encodeURIComponent(id)}`; };
@@ -119,6 +116,8 @@ document.addEventListener('click', e => {
     case 'q-done': S.profile = QD; Store.save(); QD = null; if (route.view === 'for-you') { renderView(); window.scrollTo(0, 0); } else location.hash = '#/for-you'; break;
     case 'q-skip': S.profile = { ...DEFAULT_P }; Store.save(); QD = null; renderView(); window.scrollTo(0, 0); break;
     case 'q-cancel': QD = null; break;
+    case 'ring-pause': setRingPaused(!HOME.paused); break;
+    case 'browse-cat': AJ.q = ''; AJ.by = 'cat'; AJ.wide = false; AJ.all = {}; AJ.open = Object.fromEntries(CATS.map(x => [`cat:${x[0]}`, x[0] === el.dataset.cat])); AJ.focus = el.dataset.cat; location.hash = '#/jobs'; break;
     case 'q-next': case 'q-back': case 'q-goto':
       QSTEP = a === 'q-next' ? QSTEP + 1 : a === 'q-back' ? QSTEP - 1 : +el.dataset.step;
       $('#main').innerHTML = vStart(); window.scrollTo(0, 0); $('.q-title').focus({ preventScroll: true }); break;
@@ -168,7 +167,7 @@ function renderPalette() {
   if (!toks.length) {
     const viewed = S.viewed.map(id => D.byId.get(id)).filter(Boolean).slice(0, 5);
     groups = [['Recently viewed', viewed.map(j => ({ t: j.title, s: j.company, run: () => { location.hash = `#/${route.view}/job/${j.id}`; } }))],
-      ['Go to', Object.entries(VIEWS).filter(([k]) => k !== 'start' && (k !== 'account' || authOn())).map(([k, v]) => ({ t: v.label, run: () => { location.hash = `#/${k}`; } }))]];
+      ['Go to', Object.entries(VIEWS).filter(([k]) => k !== 'start' && k !== 'home' && (k !== 'account' || authOn())).map(([k, v]) => ({ t: v.label, run: () => { location.hash = `#/${k}`; } }))]];
   } else {
     const js = sortJobs(D.jobs.filter(j => hit(`${j.title} ${j.company} ${j.location}`)), 'relevance').slice(0, 7);
     const cs = D.companies.filter(c => hit(`${c.name} ${c.category} ${c.hq}`)).slice(0, 5);
@@ -199,7 +198,7 @@ function applyTheme() {
   if (S.theme) document.documentElement.dataset.theme = S.theme; else delete document.documentElement.dataset.theme;
   $('#theme-btn').innerHTML = ico(effectiveDark() ? 'sun' : 'moon');
   $('#theme-btn').setAttribute('aria-label', effectiveDark() ? 'Switch to light theme' : 'Switch to dark theme');
-  document.querySelector('meta[name="theme-color"]').content = effectiveDark() ? '#000000' : '#0d0e0b';
+  document.querySelector('meta[name="theme-color"]').content = effectiveDark() ? '#0b0b0a' : '#f6f5f1';
 }
 $('#theme-btn').addEventListener('click', () => { S.theme = effectiveDark() ? 'light' : 'dark'; Store.save(); applyTheme(); });
 
@@ -211,7 +210,7 @@ $('#theme-btn').addEventListener('click', () => { S.theme = effectiveDark() ? 'l
     $('#main').innerHTML = emptyState('Could not load the jobs data', `${esc(err.message)}. Run <code>python3 pipeline.py</code> and open <code>dashboard.html</code>.`, '<button class="btn" type="button" onclick="location.reload()">Try again</button>');
     return;
   }
-  renderFoot(); renderTicker();
+  renderFoot();
   window.addEventListener('hashchange', onRoute);
   onRoute();
   if (authOn() && Auth.user) pullSync(false);

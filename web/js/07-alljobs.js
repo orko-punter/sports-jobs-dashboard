@@ -4,7 +4,7 @@ const GROUP_BY = { cat: 'Organisation', fn: 'Function', loc: 'Location', co: 'Co
 
 function vAll() {
   return `<div class="view">
-  <div class="head"><div><span class="eyebrow">The full list</span><h1>All jobs</h1>
+  <div class="head"><div><span class="eyebrow">The full list</span><h1>All <em>jobs</em></h1>
     <p class="lede"><b>${D.matches.length}</b> roles pass the post-MBA, function and location rules, from ${D.companies.filter(c => c.live).length} companies with live feeds. Grouped so you can scan.</p></div></div>
   <div class="toolbar">
     <label class="search"><span class="sr">Search</span>${ico('search', 'i-sm')}<input id="aq" type="search" placeholder="Search title, company, city…" value="${esc(AJ.q)}" autocomplete="off"></label>
@@ -52,6 +52,7 @@ function bindAll() {
   const q = $('#aq');
   q.addEventListener('input', debounce(() => { AJ.q = q.value; updateAll(); }, 120));
   $('#aj-wide').addEventListener('change', e => { AJ.wide = e.target.checked; updateAll(); });
+  if (AJ.focus) { const g = $(`.group[data-g="cat:${CSS.escape(AJ.focus)}"]`); AJ.focus = null; if (g) setTimeout(() => g.scrollIntoView({ block: 'start', behavior: reduceMotion() ? 'auto' : 'smooth' }), 60); }
   $('#groups').addEventListener('toggle', e => { const g = e.target.closest('.group'); if (g && !AJ.q.trim()) AJ.open[g.dataset.g] = g.open; }, true);
   updateAll();
 }
