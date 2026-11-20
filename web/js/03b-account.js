@@ -37,7 +37,13 @@ const Auth = (() => {
 
   return {
     get user() { return sess; },
-    sendCode: email => call('/auth/v1/otp', { method: 'POST', body: { email, create_user: true } }),
+    sendCode: email => call(`/auth/v1/otp?redirect_to=${encodeURIComponent(location.origin + location.pathname)}`,
+      { method: 'POST', body: { email, create_user: true } }),
+    // The email can also carry a sign-in link; Supabase sends the person back with the session in the address
+    async fromLink(p) {
+      const u = await call('/auth/v1/user', { token: p.get('access_token') });
+      setSess({ access_token: p.get('access_token'), refresh_token: p.get('refresh_token'), expires_in: +p.get('expires_in') || 3600, user: u });
+    },
     async verify(email, code) { setSess(await call('/auth/v1/verify', { method: 'POST', body: { type: 'email', email, token: code } })); },
     async signOut() {
       try { await call('/auth/v1/logout', { method: 'POST', token: await token() }); } catch (e) { /* signed out locally anyway */ }
@@ -152,7 +158,7 @@ function vAccount() {
   const err = AC.err ? `<p class="form-err" role="alert">${esc(AC.err)}</p>` : '';
   if (AC.step === 'code') {
     return `<div class="view narrow"><div class="head"><div><h1>Check your email</h1>
-      <p class="lede">We sent a sign-in code to <b>${esc(AC.email)}</b>. It can take a minute to arrive, so check spam too.</p></div></div>
+      <p class="lede">We sent an email to <b>${esc(AC.email)}</b>. Type the code from it here, or just click the sign-in link in it. It can take a minute to arrive, so check spam too.</p></div></div>
       <form class="acct-form" id="acct-form" data-step="code" novalidate>
         <label for="acct-code">Code</label>
         <div class="acct-row"><input class="field code" id="acct-code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="10" placeholder="123456" required>
@@ -168,6 +174,17 @@ function vAccount() {
       <button class="btn primary" type="submit" ${AC.busy ? 'disabled' : ''}>${AC.busy ? 'Sending…' : 'Send code'}</button></div>${err}
     </form>
     <p class="muted small">Your email is used only to sign you in. Nothing is shared, and you can delete your profile at any time.</p></div>`;
+}
+
+// Returning from the email link: #access_token=…&refresh_token=… (or #error=…)
+async function consumeAuthLink() {
+  const h = location.hash.slice(1);
+  if (!authOn() || !/(^|&)(access_token|error)=/.test(h)) return;
+  const p = new URLSearchParams(h);
+  history.replaceState(null, '', location.pathname + location.search + '#/account');
+  if (p.get('error')) { AC.err = p.get('error_description') || 'That sign-in link has expired. Send a new one.'; AC.step = 'email'; return; }
+  try { await Auth.fromLink(p); AC.step = 'email'; toast('Signed in. Your profile is saved'); return true; }
+  catch (e) { AC.err = friendlyAuthError(e); }
 }
 
 function friendlyAuthError(e) {

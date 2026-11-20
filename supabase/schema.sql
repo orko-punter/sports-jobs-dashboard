@@ -45,3 +45,11 @@ drop policy if exists "delete your own posts"    on public.qa_posts;
 create policy "anyone can read q&a"   on public.qa_posts for select using (true);
 create policy "post as yourself"      on public.qa_posts for insert to authenticated with check (auth.uid() = user_id);
 create policy "delete your own posts" on public.qa_posts for delete to authenticated using (auth.uid() = user_id);
+
+-- ---------------------------------------------------------------- API access
+-- New Supabase projects may not expose new tables to the API automatically. Grant exactly what the site needs;
+-- the row-level security policies above still decide which rows each person can touch.
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on public.profiles to authenticated;
+grant select on public.qa_posts to anon, authenticated;
+grant insert, delete on public.qa_posts to authenticated;

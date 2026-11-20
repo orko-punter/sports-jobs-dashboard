@@ -213,7 +213,8 @@ $('#theme-btn').addEventListener('click', () => { S.theme = effectiveDark() ? 'l
     return;
   }
   renderFoot();
+  const linked = await consumeAuthLink();
   window.addEventListener('hashchange', onRoute);
   onRoute();
-  if (authOn() && Auth.user) pullSync(false);
+  if (authOn() && Auth.user) pullSync(!!linked);
 })();
