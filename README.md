@@ -33,6 +33,7 @@ so it works opened from disk, on GitHub Pages, or anywhere else, with no server 
 | `web/js/05-components.js` | Job cards, toasts, copy and share |
 | `web/js/05b-home.js` | Home page: hero, 3D ring of hiring companies, count-up numbers, scroll-reveal text, pastel category cards |
 | `web/js/06…09-*.js` | Views: questions + For you, All jobs, Companies, Saved + About the data |
+| `web/js/09c-qa.js` | Questions & answers: the sticky right-hand panel (a floating button on smaller screens) |
 | `web/js/10-drawer.js` | Job and company panels |
 | `web/js/11-main.js` | Navigation, hash routing, keyboard shortcuts, ⌘K search, boot |
 
@@ -49,6 +50,7 @@ The JS files share one scope and are concatenated in filename order.
   open roles and LinkedIn routes to people
 - **Saved**: saved roles, watched companies and hidden roles
 - **Profile** (top right, when set up): sign in with an emailed code to keep answers, saved roles and watched companies on any device
+- **Questions & answers** (right-hand panel, when profiles are on): anyone can read; signed-in people can ask, answer and delete their own posts
 - **About the data** (footer link): freshness, rules, coverage table and limits
 
 Shareable links: `#/jobs/job/<id>` and `#/companies/company/<slug>` open a panel directly.
@@ -124,7 +126,7 @@ watched companies are stored in a Supabase table so they load on any device. Wit
 Profiles are off until `auth.json` is filled in. To turn them on:
 
 1. Create a free project at supabase.com
-2. **SQL Editor**: run `supabase/schema.sql` (creates `profiles`, where each person can read and write only their own row)
+2. **SQL Editor**: run `supabase/schema.sql` (creates `profiles`, where each person can read and write only their own row, and `qa_posts` for questions and answers, readable by all and written only by signed-in people as themselves)
 3. **Authentication → Emails → Templates**: in both **Magic Link** and **Confirm signup**, put the code in the email,
    for example `<p>Your Touchline code is <b>{{ .Token }}</b></p>` (the default templates only send a link)
 4. **Authentication → Emails → SMTP settings**: add your own email sender (e.g. Resend or Postmark). Supabase's built-in

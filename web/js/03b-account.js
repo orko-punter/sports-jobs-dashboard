@@ -50,6 +50,15 @@ const Auth = (() => {
         body: { id: sess.uid, email: sess.email, ...data, updated_at: new Date().toISOString() } });
     },
     async wipe() { await call(row(), { method: 'DELETE', token: await token() }); },
+    // Questions & answers: readable by anyone, written only when signed in
+    qaList: async () => call('/rest/v1/qa_posts?select=id,parent_id,user_id,author,body,created_at&order=created_at.desc&limit=300',
+      { token: sess && Date.now() < sess.exp - 60000 ? sess.access : undefined }),
+    async qaPost(body, parentId, author) {
+      const r = await call('/rest/v1/qa_posts', { method: 'POST', token: await token(), prefer: 'return=representation',
+        body: { body, parent_id: parentId || null, author, user_id: sess.uid } });
+      return r && r[0];
+    },
+    async qaDelete(id) { await call(`/rest/v1/qa_posts?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE', token: await token() }); },
   };
 })();
 
@@ -112,7 +121,7 @@ function paintAcct() {
   b.setAttribute('aria-current', route.view === 'account' ? 'page' : 'false');
   b.title = Auth.user ? Auth.user.email : 'Save your answers and roles to your email';
 }
-function afterAuth() { paintAcct(); if (D && route.view === 'account') renderView(); else if (D) afterChange(); }
+function afterAuth() { paintAcct(); if (D && route.view === 'account') renderView(); else if (D) { afterChange(); renderQA(); } }
 
 // ---------------------------------------------------------------- the Profile page
 const AC = { step: 'email', email: '', busy: false, err: '', sentAt: 0 };

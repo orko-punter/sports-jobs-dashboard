@@ -36,7 +36,7 @@ function renderView() {
   $('#main').innerHTML = v.render();
   const el = $('#main > .view'); if (el) { el.classList.add('enter'); setTimeout(() => el.classList.remove('enter'), 700); }
   if (v.bind) v.bind();
-  renderNav(); renderBanner(); paintAcct();
+  renderNav(); renderBanner(); paintAcct(); renderQA();
 }
 
 function onRoute() {
@@ -116,6 +116,7 @@ document.addEventListener('click', e => {
     case 'q-done': S.profile = QD; Store.save(); QD = null; if (route.view === 'for-you') { renderView(); window.scrollTo(0, 0); } else location.hash = '#/for-you'; break;
     case 'q-skip': S.profile = { ...DEFAULT_P }; Store.save(); QD = null; renderView(); window.scrollTo(0, 0); break;
     case 'q-cancel': QD = null; break;
+    case 'qa-open': case 'qa-sheet': case 'qa-reload': case 'qa-del': qaAction(a, el); break;
     case 'ring-pause': setRingPaused(!HOME.paused); break;
     case 'browse-cat': AJ.q = ''; AJ.by = 'cat'; AJ.wide = false; AJ.all = {}; AJ.open = Object.fromEntries(CATS.map(x => [`cat:${x[0]}`, x[0] === el.dataset.cat])); AJ.focus = el.dataset.cat; location.hash = '#/jobs'; break;
     case 'q-next': case 'q-back': case 'q-goto':
@@ -141,6 +142,7 @@ document.addEventListener('keydown', e => {
   const pal = !$('#palette').hidden;
   if (e.key === 'Escape') {
     if (pal) return closePalette();
+    if (QA.sheet && $('#drawer').hidden) { QA.sheet = false; renderQA(); $('.qa-fab').focus(); return; }
     if (!$('#drawer').hidden) { location.hash = closeHref(); return; }
   }
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal ? closePalette() : openPalette(); return; }
