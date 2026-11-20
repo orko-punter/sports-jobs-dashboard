@@ -42,7 +42,7 @@ function onRoute() {
   const changed = nextView !== route.view;
   route.view = nextView; route.panel = panel || null; route.id = id ? decodeURIComponent(id) : null;
   if (changed) {
-    if (nextView === 'start') QD = null;
+    if (nextView === 'start') { QD = null; QSTEP = QSTEP_NEXT; QSTEP_NEXT = 0; }
     if (nextView === 'for-you') FY.n = 25;
     renderView();
     window.scrollTo(0, 0);
@@ -77,6 +77,21 @@ function afterChange() {
   }
 }
 
+// Redraw the question in place; the running count pulses when it changes
+function qRedraw() {
+  const y = window.scrollY, before = $('#q-n') ? $('#q-n').textContent : '';
+  $('#main').innerHTML = vStart(); window.scrollTo(0, y);
+  const n = $('#q-n'); if (n && n.textContent !== before) n.classList.add('bump');
+}
+
+// The ticker under the top bar: the newest matched roles, looping
+function renderTicker() {
+  const items = sortJobs(D.matches.filter(j => !isHidden(j.id)), 'newest').slice(0, 14);
+  if (!items.length) { $('#ticker').innerHTML = ''; return; }
+  const run = copy => items.map(j => `<button type="button" class="tk" data-act="open-job" data-id="${j.id}" ${copy ? 'tabindex="-1" aria-hidden="true"' : ''}>${j.new ? '<b class="tk-new">New</b>' : ''}<span class="tk-t">${esc(j.title)}</span><span class="tk-c">${esc(j.company)}</span></button><span class="tk-dot" aria-hidden="true">/</span>`).join('');
+  $('#ticker').innerHTML = `<div class="ticker" role="region" aria-label="Latest roles"><span class="live">Latest</span><div class="tk-track"><div class="tk-run">${run(false)}${run(true)}</div></div></div>`;
+}
+
 const go = (panel, id) => { location.hash = `#/${route.view}/${panel}/${encodeURIComponent(id)}`; };
 
 document.addEventListener('click', e => {
@@ -99,11 +114,16 @@ document.addEventListener('click', e => {
     // questions
     case 'q': { const k = el.dataset.k, v = el.dataset.v; QD[k] = QD[k].includes(v) ? QD[k].filter(x => x !== v) : [...QD[k], v];
       if (k === 'cat' && !QD.cat.includes(CONSULTING)) QD.adv = [];
-      const y = window.scrollY; $('#main').innerHTML = vStart(); window.scrollTo(0, y); break; }
-    case 'q-stretch': { QD.stretch = el.dataset.v === '1'; const y = window.scrollY; $('#main').innerHTML = vStart(); window.scrollTo(0, y); break; }
+      qRedraw(); break; }
+    case 'q-stretch': QD.stretch = el.dataset.v === '1'; qRedraw(); break;
     case 'q-done': S.profile = QD; Store.save(); QD = null; if (route.view === 'for-you') { renderView(); window.scrollTo(0, 0); } else location.hash = '#/for-you'; break;
     case 'q-skip': S.profile = { ...DEFAULT_P }; Store.save(); QD = null; renderView(); window.scrollTo(0, 0); break;
     case 'q-cancel': QD = null; break;
+    case 'q-next': case 'q-back': case 'q-goto':
+      QSTEP = a === 'q-next' ? QSTEP + 1 : a === 'q-back' ? QSTEP - 1 : +el.dataset.step;
+      $('#main').innerHTML = vStart(); window.scrollTo(0, 0); $('.q-title').focus({ preventScroll: true }); break;
+    case 'q-any': QD[el.dataset.k] = []; if (el.dataset.k === 'cat') QD.adv = []; qRedraw(); break;
+    case 'q-edit': QSTEP_NEXT = +el.dataset.step; location.hash = '#/start'; break;
     case 'acct-back': case 'acct-resend': case 'acct-out': case 'acct-delete': accountAction(a); break;
     // For you
     case 'fy-sort': FY.sort = el.dataset.v; FY.n = 25; $('#main').innerHTML = vForYou(); break;
@@ -179,7 +199,7 @@ function applyTheme() {
   if (S.theme) document.documentElement.dataset.theme = S.theme; else delete document.documentElement.dataset.theme;
   $('#theme-btn').innerHTML = ico(effectiveDark() ? 'sun' : 'moon');
   $('#theme-btn').setAttribute('aria-label', effectiveDark() ? 'Switch to light theme' : 'Switch to dark theme');
-  document.querySelector('meta[name="theme-color"]').content = effectiveDark() ? '#111110' : '#fafaf8';
+  document.querySelector('meta[name="theme-color"]').content = effectiveDark() ? '#000000' : '#0d0e0b';
 }
 $('#theme-btn').addEventListener('click', () => { S.theme = effectiveDark() ? 'light' : 'dark'; Store.save(); applyTheme(); });
 
@@ -191,7 +211,7 @@ $('#theme-btn').addEventListener('click', () => { S.theme = effectiveDark() ? 'l
     $('#main').innerHTML = emptyState('Could not load the jobs data', `${esc(err.message)}. Run <code>python3 pipeline.py</code> and open <code>dashboard.html</code>.`, '<button class="btn" type="button" onclick="location.reload()">Try again</button>');
     return;
   }
-  renderFoot();
+  renderFoot(); renderTicker();
   window.addEventListener('hashchange', onRoute);
   onRoute();
   if (authOn() && Auth.user) pullSync(false);

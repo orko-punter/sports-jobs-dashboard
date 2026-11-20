@@ -6,20 +6,21 @@ const shortLoc = j => {
 };
 const whenShort = j => j.postedDate ? fmtShort(j.postedDate) : j.firstSeen ? fmtShort(j.firstSeen) : '';
 
-const saveBtn = (j, cls = 'icon-btn') =>
-  `<button class="${cls}" type="button" data-act="save" data-id="${j.id}" aria-pressed="${isSaved(j.id)}" aria-label="${isSaved(j.id) ? 'Unsave' : 'Save'} ${esc(j.title)}" title="Save">${ico('bookmark')}</button>`;
+const saveBtn = (j, cls = 'icon-btn', label = false) =>
+  `<button class="${cls}" type="button" data-act="save" data-id="${j.id}" aria-pressed="${isSaved(j.id)}" aria-label="${isSaved(j.id) ? 'Unsave' : 'Save'} ${esc(j.title)}" title="Save">${ico('bookmark', label ? 'i-sm' : '')}${label ? `<span>${isSaved(j.id) ? 'Saved' : 'Save'}</span>` : ''}</button>`;
 const watchBtn = (c, cls = 'btn sm') =>
   `<button class="${cls}" type="button" data-act="watch" data-co="${esc(c.id)}" aria-pressed="${isWatched(c.name)}">${ico('star', 'i-sm')}<span>${isWatched(c.name) ? 'Watching' : 'Watch'}</span></button>`;
 
 function jobRow(j) {
   const fn = j.fns[0] || '';
-  return `<article class="job${isHidden(j.id) ? ' is-hidden' : ''}${S.viewed.includes(j.id) ? ' seen' : ''}">
+  return `<article class="job${isHidden(j.id) ? ' is-hidden' : ''}${S.viewed.includes(j.id) ? ' seen' : ''}" style="--cat:${catColor(j.category)}">
     <button class="hit" type="button" data-act="open-job" data-id="${j.id}" aria-label="${esc(j.title)} at ${esc(j.company)}"></button>
-    <div style="min-width:0;position:relative;pointer-events:none">
-      <h3>${esc(j.title)}${j.new ? '<span class="new">New</span>' : ''}</h3>
-      <div class="meta"><span class="co">${esc(j.company)}</span><span>${esc(shortLoc(j))}</span>${fn ? `<span>${esc(fn)}</span>` : ''}${j.sen === 'Stretch' ? '<span>Stretch</span>' : ''}${!j.match ? '<span>Outside the post-MBA rules</span>' : ''}</div>
+    <div class="job-main">
+      <div class="kicker"><span class="cat">${esc(CAT_SHORT[j.category] || catLabel(j.category))}</span>${j.new ? '<span class="new">New</span>' : ''}${j.sen === 'Stretch' ? '<span class="tag">Stretch</span>' : ''}${!j.match ? '<span class="tag">Outside the rules</span>' : ''}</div>
+      <h3>${esc(j.title)}</h3>
+      <div class="meta"><span class="co">${esc(j.company)}</span><span>${esc(shortLoc(j))}</span>${fn ? `<span>${esc(fn)}</span>` : ''}</div>
     </div>
-    <div class="side"><span class="when num">${esc(whenShort(j))}</span>${saveBtn(j)}</div>
+    <div class="side"><span class="when num">${esc(whenShort(j))}</span>${saveBtn(j, 'btn sm save', true)}${ext(j.url, `Apply ${ico('ext', 'i-sm')}`, 'btn sm dark', `aria-label="Apply for ${esc(j.title)} (opens company site)"`)}</div>
   </article>`;
 }
 

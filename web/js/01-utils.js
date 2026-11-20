@@ -45,6 +45,25 @@ const CATS = [
   ['Venues, Events & Ticketing', 'Venues, Events & Ticketing'],
   ['Sports Tech & Platforms', 'Sports Tech & Platforms'],
 ];
+// Each organisation type gets a kit colour, used on job cards and group headers
+const CAT_COLOR = {
+  'Consulting & Advisory': '#e0531f', 'Agencies & Rights Marketing': '#2f6fde', 'Leagues & Rights Holders': '#0e8a4b',
+  'Clubs & Teams': '#c4245c', 'Media & Data': '#7b52d6', 'Investors & Banks': '#b38209', 'Brands & Apparel': '#0f97a5',
+  'Venues, Events & Ticketing': '#9a6a43', 'Sports Tech & Platforms': '#4b5bd6',
+};
+const CAT_SHORT = {
+  'Consulting & Advisory': 'Consulting', 'Agencies & Rights Marketing': 'Agency', 'Leagues & Rights Holders': 'League / rights holder',
+  'Clubs & Teams': 'Club', 'Media & Data': 'Media & data', 'Investors & Banks': 'Investor', 'Brands & Apparel': 'Brand',
+  'Venues, Events & Ticketing': 'Venue & events', 'Sports Tech & Platforms': 'Sports tech',
+};
+const CAT_HINT = {
+  'Consulting & Advisory': 'Strategy, valuation, analytics and deal advisers', 'Agencies & Rights Marketing': 'Sponsorship, rights sales and athlete agencies',
+  'Leagues & Rights Holders': 'Leagues, federations and event owners', 'Clubs & Teams': 'Football clubs, franchises and teams',
+  'Media & Data': 'Broadcasters, streamers and sports data', 'Investors & Banks': 'Funds, banks and sports investors',
+  'Brands & Apparel': 'Kit makers and sponsor brands', 'Venues, Events & Ticketing': 'Stadiums, live events and ticketing',
+  'Sports Tech & Platforms': 'Officiating, video and fan platforms',
+};
+const catColor = c => CAT_COLOR[c] || '#8a877d';
 const catLabel = c => (CATS.find(x => x[0] === c) || [c, c])[1];
 const ADV = ['strategy', 'media', 'analytics', 'research', 'deals', 'generalist'];
 const advLabel = k => (D && D.advTypes[k] && D.advTypes[k][0]) || k;

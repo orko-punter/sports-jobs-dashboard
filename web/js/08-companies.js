@@ -4,7 +4,7 @@ const CF = { q: '', watch: false, open: {} };
 function vCompanies() {
   const live = D.companies.filter(c => c.live).length;
   return `<div class="view">
-  <div class="head"><div><h1>Companies</h1>
+  <div class="head"><div><span class="eyebrow">Who's hiring</span><h1>Companies</h1>
     <p class="lede"><b>${D.companies.length}</b> sport business employers. ${live} have job feeds we read every day; for the rest, check their careers site.</p></div></div>
   <div class="toolbar" style="margin-bottom:20px">
     <label class="search"><span class="sr">Search companies</span>${ico('search', 'i-sm')}<input id="cq" type="search" placeholder="Search companies…" value="${esc(CF.q)}" autocomplete="off"></label>
@@ -18,7 +18,7 @@ function coRow(c) {
     : c.error ? '<span class="err">Feed failed</span>' : '<span class="hand">Check by hand</span>';
   return `<div class="co-row"><button class="hit" type="button" data-act="open-co" data-co="${esc(c.id)}" aria-label="${esc(c.name)}"></button>
     <div style="min-width:0;position:relative;pointer-events:none"><b>${esc(c.name)}</b>${isWatched(c.name) ? ' <span class="muted" title="Watching">★</span>' : ''}<div class="why">${esc(c.why || c.hq || '')}</div></div>
-    <div class="side">${status}${ext(c.careers_url, `<span>Careers</span>${ico('ext', 'i-sm')}`, 'ext', `aria-label="${esc(c.name)} careers site"`)}</div></div>`;
+    <div class="side">${status}${ext(c.careers_url, `<span>Careers</span>${ico('ext', 'i-sm')}`, 'btn sm', `aria-label="${esc(c.name)} careers site"`)}</div></div>`;
 }
 
 function updateCompanies() {
@@ -37,7 +37,7 @@ function updateCompanies() {
       ? ADV.map(k => { const s = cs.filter(c => c.advisory_type === k); return s.length ? `<p class="subhead">${esc(advLabel(k))}</p><p class="gdesc" style="margin:0 0 4px">${esc(advDesc(k))}</p><div class="cos">${s.map(coRow).join('')}</div>` : ''; }).join('')
         + (cs.some(c => !ADV.includes(c.advisory_type)) ? `<div class="cos">${cs.filter(c => !ADV.includes(c.advisory_type)).map(coRow).join('')}</div>` : '')
       : `<div class="cos">${cs.map(coRow).join('')}</div>`;
-    return `<details class="group" data-cat="${esc(cat)}" ${open ? 'open' : ''}><summary><h2>${esc(catLabel(cat))}</h2><span class="c">${cs.length} · ${plural(m, 'role')}</span>${ico('arrow', 'chev i-sm')}</summary><div class="gbody">${body}</div></details>`;
+    return `<details class="group" data-cat="${esc(cat)}" ${open ? 'open' : ''}><summary style="--cat:${catColor(cat)}"><span class="sw" aria-hidden="true"></span><h2>${esc(catLabel(cat))}</h2><span class="c">${cs.length} · ${plural(m, 'role')}</span>${ico('arrow', 'chev i-sm')}</summary><div class="gbody">${body}</div></details>`;
   }).join('');
 }
 

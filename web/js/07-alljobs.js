@@ -4,7 +4,7 @@ const GROUP_BY = { cat: 'Organisation', fn: 'Function', loc: 'Location', co: 'Co
 
 function vAll() {
   return `<div class="view">
-  <div class="head"><div><h1>All jobs</h1>
+  <div class="head"><div><span class="eyebrow">The full list</span><h1>All jobs</h1>
     <p class="lede"><b>${D.matches.length}</b> roles pass the post-MBA, function and location rules, from ${D.companies.filter(c => c.live).length} companies with live feeds. Grouped so you can scan.</p></div></div>
   <div class="toolbar">
     <label class="search"><span class="sr">Search</span>${ico('search', 'i-sm')}<input id="aq" type="search" placeholder="Search title, company, city…" value="${esc(AJ.q)}" autocomplete="off"></label>
@@ -42,9 +42,9 @@ function updateAll() {
   box.innerHTML = gs.map(([k, js], i) => {
     const id = `${AJ.by}:${k}`, open = searching || (id in AJ.open ? AJ.open[id] : i < 2);
     const showAll = AJ.all[id] || searching, shown = showAll ? js : js.slice(0, 5);
-    return `<details class="group" data-g="${esc(id)}" ${open ? 'open' : ''}><summary><h2>${esc(groupLabel(k))}</h2><span class="c num">${js.length}</span>${ico('arrow', 'chev i-sm')}</summary>
+    return `<details class="group" data-g="${esc(id)}" ${open ? 'open' : ''}><summary ${AJ.by === 'cat' ? `style="--cat:${catColor(k)}"` : ''}><span class="sw" aria-hidden="true"></span><h2>${esc(groupLabel(k))}</h2><span class="c num">${js.length}</span>${ico('arrow', 'chev i-sm')}</summary>
       <div class="gbody"><div class="jobs">${shown.map(jobRow).join('')}</div>
-      ${js.length > shown.length ? `<div class="more-row" style="padding-bottom:0"><button class="link" type="button" data-act="g-all" data-g="${esc(id)}">Show all ${js.length}</button></div>` : ''}</div></details>`;
+      ${js.length > shown.length ? `<div class="more-row" style="padding-bottom:0"><button class="btn sm" type="button" data-act="g-all" data-g="${esc(id)}">Show all ${js.length} ${ico('arrow', 'i-sm')}</button></div>` : ''}</div></details>`;
   }).join('');
 }
 
